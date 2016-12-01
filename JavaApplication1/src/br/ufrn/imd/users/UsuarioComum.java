@@ -9,6 +9,10 @@ package br.ufrn.imd.users;
  *
  * @author pedroarthur-mf
  */
-public class UsuarioComum {
+public class UsuarioComum extends Usario{
+    
+    public UsuarioComum(String nome, String senha) {
+        super(nome, senha);
+    }
     
 }
