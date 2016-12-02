@@ -5,7 +5,7 @@
  */
 package br.ufrn.imd.telas;
 
-import br.ufrn.imd.musica.BancoMusicas;
+import br.ufrn.imd.controle.BancoMusicas;
 import br.ufrn.imd.musica.Musica;
 import br.ufrn.imd.musica.Tocador;
 import java.io.File;
@@ -51,15 +51,17 @@ public class Principal extends javax.swing.JFrame {
         bm = new BancoMusicas();
         ArrayList<String> d = bm.getListDiretorio();
         for (String nome : d) {
-            File arquivo = new File(nome);
-            File[] arquivosDir = arquivo.listFiles();
-            for (File musicaArq : arquivosDir) {
-                listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
+            if (nome.endsWith(".mp3")) {
+                File arquivo = new File(nome);
+                File[] arquivosDir = arquivo.listFiles();
+                for (File musicaArq : arquivosDir) {
+                    listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
+                }
             }
         }
         ArrayList<String> m = bm.getListMusicas();
-        for(String nome : m){
-             listModel.addElement(new Musica(nome));
+        for (String nome : m) {
+            listModel.addElement(new Musica(nome));
         }
         ListaMusicas.setModel(listModel);
 
@@ -204,6 +206,7 @@ public class Principal extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
@@ -274,12 +277,15 @@ public class Principal extends javax.swing.JFrame {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {    //DIRETORIO
+                // Filtrar arquivos .mp3 de dentro do diretório.
                 File[] arquivosDir = arquivo.getSelectedFile().listFiles();
 
                 for (File musicaArq : arquivosDir) {
-                    Musica m = new Musica(musicaArq.getAbsolutePath());
-                    if (!isOnList(m)) {
-                        listModel.addElement(m);
+                    if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
+                        Musica m = new Musica(musicaArq.getAbsolutePath());
+                        if (!isOnList(m)) {
+                            listModel.addElement(m);
+                        }
                     }
                 }
                 try {
@@ -347,7 +353,7 @@ public class Principal extends javax.swing.JFrame {
 
     private boolean isOnList(Musica m) {
         for (int i = 0; i < listModel.getSize(); i++) {
-            if (m.getNome() == ((Musica) listModel.getElementAt(i)).getNome() && m.getCaminho() == ((Musica) listModel.getElementAt(i)).getCaminho()) {
+            if (m.getNome().equals(((Musica) listModel.getElementAt(i)).getNome()) && m.getCaminho().equals(((Musica) listModel.getElementAt(i)).getCaminho())) {
                 return true;
             }
         }
