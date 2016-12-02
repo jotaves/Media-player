@@ -40,4 +40,11 @@ public class UsuarioPremium extends Usuario {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " true"; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }

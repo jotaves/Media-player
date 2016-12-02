@@ -20,22 +20,30 @@ import java.util.ArrayList;
  */
 public class BancoMusicas {
 
-    private final File diretorio;
-    private final File musicas;
-    private final ArrayList<String> listDiretorio;
-    private ArrayList<String> listMusicas;
+    private static BancoMusicas uniqueInstance;
+    private static File diretorio;
+    private static File musicas;
+    private static ArrayList<String> listDiretorio;
+    private static ArrayList<String> listMusicas;
 
-    public BancoMusicas() throws IOException {
-        this.diretorio = new File("diretorio.txt");
-        this.musicas = new File("musicas.txt");
-        this.listDiretorio = new ArrayList<String>();
-        this.listMusicas = new ArrayList<String>();
+    private BancoMusicas() {
 
+    }
+    
+    public static synchronized BancoMusicas getInstance() throws IOException {
+        if (uniqueInstance == null) {
+            uniqueInstance = new BancoMusicas();
+            diretorio = new File("diretorio.txt");
+            musicas = new File("musicas.txt");
+            listDiretorio = new ArrayList<String>();
+            listMusicas = new ArrayList<String>();
+        }
         lerDiretorios();
         lerMusicas();
-    }
+        return uniqueInstance;        
+    }    
 
-    private void lerDiretorios() throws FileNotFoundException, IOException {
+    private static void lerDiretorios() throws FileNotFoundException, IOException {
         FileReader fileReader = new FileReader(diretorio);
         BufferedReader reader = new BufferedReader(fileReader);
         String data;
@@ -50,20 +58,18 @@ public class BancoMusicas {
         return listDiretorio;
     }
 
+    // Provavelmente com erros.
     public void addDiretotio(String caminho) throws IOException {
         if (!listDiretorio.contains(caminho)) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(this.diretorio));
-            for(String e : listDiretorio){
-                 writer.write(e);
-                 writer.newLine();
-             }
-            writer.write(caminho);
+            FileWriter writer = new FileWriter(this.diretorio);
+            writer.append(caminho);
             writer.flush();
             listDiretorio.add(caminho);
+            writer.close();
         }
     }
 
-    private void lerMusicas() throws FileNotFoundException, IOException {
+    private static void lerMusicas() throws FileNotFoundException, IOException {
         FileReader fileReader = new FileReader(musicas);
         BufferedReader reader = new BufferedReader(fileReader);
         String data;
@@ -81,16 +87,16 @@ public class BancoMusicas {
 
     public void addMusicas(String caminho) throws IOException {
         if (!listMusicas.contains(caminho)) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(this.musicas));
-             for(String e : listMusicas){
-                 writer.write(e);
-                 writer.newLine();
-             }
-            writer.write(caminho);
+            FileWriter writer = new FileWriter(this.musicas);
+            writer.append(caminho);
             writer.flush();
-            
+            writer.close();
             listMusicas.add(caminho);
         }
     }
-
+    
+    public void removerMusicas() {
+        listMusicas = new ArrayList<>();
+        listDiretorio = new ArrayList<>();
+    }
 }

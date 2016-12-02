@@ -32,9 +32,9 @@ public class Login extends javax.swing.JFrame {
 
     /**
      * Creates new form Login
+     * @throws java.io.IOException
      */
     public Login() throws IOException {
-//        this.getRootPane().setDefaultButton(btnLogin);        
         this.file = new File("usuarios.txt");
         carregarUsuarios();
         initComponents();
@@ -54,7 +54,8 @@ public class Login extends javax.swing.JFrame {
         txtSenha = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnCadastro = new javax.swing.JButton();
+        lblErro = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -87,37 +88,35 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setText("Senha:");
 
-        jButton1.setText("Cadastrar-se");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCadastro.setText("Cadastrar-se");
+        btnCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCadastroActionPerformed(evt);
             }
         });
+
+        lblErro.setText(" ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtUsuario)
-                                .addComponent(txtSenha)
-                                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(38, 38, 38))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(68, 68, 68))))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtUsuario)
+                    .addComponent(lblErro, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSenha)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                    .addComponent(btnCadastro))
+                .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(27, 27, 27)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -125,11 +124,13 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(lblErro)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogin)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCadastro)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -145,7 +146,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSenhaActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        boolean ok = usuarios.verificarUsuario(txtUsuario.getText(), txtSenha.getText());
+        boolean ok = usuarios.verificarUsuarioESenha(txtUsuario.getText(), txtSenha.getText());
 
         if (ok) {
             Principal p;
@@ -157,18 +158,19 @@ public class Login extends javax.swing.JFrame {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        else {
+            lblErro.setText("Usuário ou senha incorretos.");
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
+        Cadastro c = new Cadastro();
+        c.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCadastroActionPerformed
 
     private void btnLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnLoginKeyPressed
-//        if (evt.getKeyCode() == VK_ENTER) {
-//            for (ActionListener a : btnLogin.getActionListeners()) {
-//                a.actionPerformed();
-//            }
-//        }
+
     }//GEN-LAST:event_btnLoginKeyPressed
 
     /**
@@ -211,27 +213,27 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCadastro;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblErro;
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 
     private void carregarUsuarios() throws IOException {
         FileReader fileReader = new FileReader(file);
-        try (BufferedReader reader = new BufferedReader(fileReader)) {
+        BufferedReader reader = new BufferedReader(fileReader);
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] particoes = linha.split(" ");
+                System.out.println(particoes[0]);
                 if (particoes[2].equals("true")) {
                     usuarios.adicionarUsuario(new UsuarioPremium(particoes[0], particoes[1]));
-                }
-                else {
+                } else {
                     usuarios.adicionarUsuario(new UsuarioComum(particoes[0], particoes[1]));
                 }
             }
-        }
     }
 }

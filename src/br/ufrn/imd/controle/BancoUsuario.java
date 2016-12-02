@@ -6,6 +6,7 @@
 package br.ufrn.imd.controle;
 
 import br.ufrn.imd.users.Usuario;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -16,13 +17,14 @@ public class BancoUsuario {
     private static ArrayList<Usuario> usuarios;
     private static BancoUsuario uniqueInstance;
     
-    private BancoUsuario() {
+    BancoUsuario() {
     }
     
     public static synchronized BancoUsuario getInstance() {
-        if (uniqueInstance == null)
+        if (uniqueInstance == null) {
             uniqueInstance = new BancoUsuario();
-        usuarios = new ArrayList<>();
+            usuarios = new ArrayList<>();
+        }
         return uniqueInstance;
     }
     
@@ -30,12 +32,25 @@ public class BancoUsuario {
         usuarios.add(u);
     }
     
-    public boolean verificarUsuario(String nome, String senha) {
+    public boolean verificarUsuario(String nome) {
+        for (Usuario usuario : usuarios) {
+            if(nome.equals(usuario.getNome())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean verificarUsuarioESenha(String nome, String senha) {
         for (Usuario usuario : usuarios) {
             if(nome.equals(usuario.getNome()) && senha.equals(usuario.getSenha())) {
                 return true;
             }
         }
         return false;
+    }
+    
+    public ArrayList<Usuario> getUsuarios () {
+        return usuarios;
     }
 }
