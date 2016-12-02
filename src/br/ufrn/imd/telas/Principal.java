@@ -5,9 +5,13 @@
  */
 package br.ufrn.imd.telas;
 
+import br.ufrn.imd.musica.BancoMusicas;
 import br.ufrn.imd.musica.Musica;
 import br.ufrn.imd.musica.Tocador;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -25,12 +29,15 @@ public class Principal extends javax.swing.JFrame {
     private String caminho;
     private Thread thMusica;
     private int estado; //0-parado, 1-pausado, 2-tocando
-    DefaultListModel listModel;
+    private DefaultListModel listModel;
+    private BancoMusicas bm;
 
     /**
      * Creates new form Principal
+     *
+     * @throws java.io.IOException
      */
-    public Principal() {
+    public Principal() throws IOException {
         initComponents();
         this.estado = 0;
         btnParar.setEnabled(false);
@@ -40,6 +47,22 @@ public class Principal extends javax.swing.JFrame {
         listModel = new DefaultListModel();
         ListaMusicas.setModel(listModel);
         ListaMusicas.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        bm = new BancoMusicas();
+        ArrayList<String> d = bm.getListDiretorio();
+        for (String nome : d) {
+            File arquivo = new File(nome);
+            File[] arquivosDir = arquivo.listFiles();
+            for (File musicaArq : arquivosDir) {
+                listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
+            }
+        }
+        ArrayList<String> m = bm.getListMusicas();
+        for(String nome : m){
+             listModel.addElement(new Musica(nome));
+        }
+        ListaMusicas.setModel(listModel);
+
     }
 
     /**
@@ -63,6 +86,7 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         ListaMusPlaylist = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
+        btnLimpar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
@@ -116,11 +140,22 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel2.setText("Músicas");
 
+        btnLimpar.setText("Limpar");
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnAbrir)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(51, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -138,12 +173,11 @@ public class Principal extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnPausar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(btnLimpar)))
                 .addGap(41, 41, 41))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnAbrir)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,7 +198,9 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
-                .addGap(47, 47, 47))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnLimpar)
+                .addContainerGap())
         );
 
         pack();
@@ -199,6 +235,7 @@ public class Principal extends javax.swing.JFrame {
             this.estado = 0;
             btnParar.setEnabled(false);
             btnPlay.setEnabled(true);
+            btnPausar.setEnabled(false);
 
         }
     }//GEN-LAST:event_btnPararActionPerformed
@@ -215,15 +252,43 @@ public class Principal extends javax.swing.JFrame {
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquvos MP3", "mp3");
         JFileChooser arquivo = new JFileChooser();
-        arquivo.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        arquivo.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         arquivo.setAcceptAllFileFilterUsed(false);
         arquivo.addChoosableFileFilter(filtro);
 
         int r = arquivo.showOpenDialog(null);
         if (r == JFileChooser.APPROVE_OPTION) {
-            //this.caminho = arquivo.getSelectedFile().getAbsolutePath();
-            //System.out.println(this.caminho);
-            listModel.addElement(new Musica(arquivo.getSelectedFile().getAbsolutePath()));
+            if (arquivo.getSelectedFile().isFile()) {//ARQUIVO MP3
+                Musica m = new Musica(arquivo.getSelectedFile().getAbsolutePath());
+                if (!isOnList(m)) {
+                    listModel.addElement(m);
+                    try {
+                        bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                try {
+                    bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
+                } catch (IOException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {    //DIRETORIO
+                File[] arquivosDir = arquivo.getSelectedFile().listFiles();
+
+                for (File musicaArq : arquivosDir) {
+                    Musica m = new Musica(musicaArq.getAbsolutePath());
+                    if (!isOnList(m)) {
+                        listModel.addElement(m);
+                    }
+                }
+                try {
+                    bm.addDiretotio(arquivo.getSelectedFile().getAbsolutePath());
+                    System.out.println(arquivo.getSelectedFile().getAbsolutePath());
+                } catch (IOException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             ListaMusicas.setModel(listModel);
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
@@ -236,6 +301,10 @@ public class Principal extends javax.swing.JFrame {
             btnPlay.setEnabled(true);
         }
     }//GEN-LAST:event_ListaMusicasMouseClicked
+
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLimparActionPerformed
 
     /**
      * @param args the command line arguments
@@ -267,9 +336,22 @@ public class Principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Principal().setVisible(true);
+                try {
+                    new Principal().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
+    }
+
+    private boolean isOnList(Musica m) {
+        for (int i = 0; i < listModel.getSize(); i++) {
+            if (m.getNome() == ((Musica) listModel.getElementAt(i)).getNome() && m.getCaminho() == ((Musica) listModel.getElementAt(i)).getCaminho()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -277,6 +359,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JList<String> ListaMusicas;
     private javax.swing.JList<String> ListaPlaylist;
     private javax.swing.JButton btnAbrir;
+    private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnParar;
     private javax.swing.JButton btnPausar;
     private javax.swing.JButton btnPlay;
