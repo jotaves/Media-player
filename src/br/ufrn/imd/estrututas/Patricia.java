@@ -3,16 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.imd.users;
+package br.ufrn.imd.estrututas;
 
 /**
  *
- * @author pedroarthur-mf
+ * @author jotave
  */
-public class UsuarioComum extends Usuario{
-    
-    public UsuarioComum(String nome, String senha) {
-        super(nome, senha);
-    }
+public class Patricia {
     
 }
