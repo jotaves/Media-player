@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class BancoUsuario {
     private static ArrayList<Usuario> usuarios;
     private static BancoUsuario uniqueInstance;
+    private static Usuario usuarioLogado;
     
     BancoUsuario() {
     }
@@ -52,5 +53,9 @@ public class BancoUsuario {
     
     public ArrayList<Usuario> getUsuarios () {
         return usuarios;
+    }
+    
+    public void setUsuarioLogado(Usuario u) {
+        usuarioLogado = u;
     }
 }
