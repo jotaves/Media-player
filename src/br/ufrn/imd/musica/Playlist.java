@@ -24,11 +24,14 @@ public class Playlist {
     private String nome;
     private ArrayList<Musica> musicas;
     private UsuarioPremium usuario;
+    File file;
 
     public Playlist(String nome, UsuarioPremium u) throws IOException {
         this.nome = nome;
         this.musicas = new ArrayList<>();
         this.usuario = u;
+        this.file = new File("bancos/playlist_" + this.nome + ".txt");
+
     }
 
     public String getNome() {
@@ -41,13 +44,15 @@ public class Playlist {
 
     public void AdicionarMusica(String caminho) throws IOException {
         if (!musicas.contains(caminho)) {
-            File file = new File("bancos/playlist_" + this.nome + ".txt");
-            FileWriter writer = new FileWriter(file, true);
-
-            writer.append(caminho + "\n");
+            musicas.add(new Musica(caminho));
+            FileWriter writer = new FileWriter(file, false);
+            writer.write(usuario.getNome() + "\n");
+            writer.write(this.nome + "\n");
+            for (Musica m : musicas) {
+                writer.write(m.getCaminho() + "\n");
+            }
             writer.flush();
             writer.close();
-            musicas.add(new Musica(caminho));
         }
     }
 
@@ -56,8 +61,6 @@ public class Playlist {
     }
 
     public void removerMusica(Musica m) throws FileNotFoundException, IOException {
-        File file = new File("bancos/playlist_" + this.nome + ".txt");
-
         FileReader fileReader = new FileReader(file);
         BufferedReader reader = new BufferedReader(fileReader);
         String usuario = reader.readLine();

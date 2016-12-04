@@ -5,6 +5,7 @@
  */
 package br.ufrn.imd.trie;
 
+import com.sun.org.apache.xml.internal.utils.Trie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

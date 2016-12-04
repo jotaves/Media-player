@@ -341,8 +341,16 @@ public class Principal extends javax.swing.JFrame {
             this.thMusica.resume();
             estado = 2;
         } else if (estado == 0) {
+            thMusica.stop();
+            thPlaylist.stop();
             Tocador p1;
             if (!ListaPlaylist.isSelectionEmpty()) {
+                this.estado = 2;
+                btnParar.setEnabled(true);
+                btnPausar.setEnabled(true);
+                btnPlay.setEnabled(false);
+                btnProx.setEnabled(true);
+                BtnAnt.setEnabled(true);
 
                 this.thPlaylist = new Thread(
                         new Runnable() {
@@ -365,12 +373,7 @@ public class Principal extends javax.swing.JFrame {
                     }
                 });
                 this.thPlaylist.start();
-                this.estado = 2;
-                btnParar.setEnabled(true);
-                btnPausar.setEnabled(true);
-                btnPlay.setEnabled(false);
-                btnProx.setEnabled(true);
-                BtnAnt.setEnabled(true);
+
             } else {
                 try {
                     p1 = new Tocador(this.caminho);
@@ -413,7 +416,6 @@ public class Principal extends javax.swing.JFrame {
             } else {
                 this.thPlaylist.stop();
                 this.thMusica.stop();
-                this.thPlaylist.stop();
             }
             btnParar.setEnabled(false);
             btnPlay.setEnabled(true);
@@ -504,7 +506,7 @@ public class Principal extends javax.swing.JFrame {
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         FileWriter writer;
         try {
-            
+
             writer = new FileWriter("bancos/musicas.txt", false);
             writer.write("");
             writer.flush();
@@ -516,7 +518,7 @@ public class Principal extends javax.swing.JFrame {
         }
 
         try {
-            writer = new FileWriter("bancos/diretorio.txt",false);
+            writer = new FileWriter("bancos/diretorio.txt", false);
             writer.write("");
             writer.flush();
             writer.close();
@@ -601,6 +603,11 @@ public class Principal extends javax.swing.JFrame {
         int index = ListaMusPlaylist.getSelectedIndex();
         ListaMusPlaylist.setSelectedIndex(--index);
 
+        thPlaylist.stop();
+        thMusica.stop();
+        this.estado = 0;
+
+        btnPlayActionPerformed(evt);
     }//GEN-LAST:event_BtnAntActionPerformed
 
     /**

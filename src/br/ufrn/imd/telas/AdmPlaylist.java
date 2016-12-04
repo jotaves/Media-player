@@ -282,7 +282,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
             Logger.getLogger(AdmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.setVisible(false);
-        this.disable();
+        
     }//GEN-LAST:event_btnOKActionPerformed
 
     private void ListaPlaylistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaPlaylistMouseClicked
