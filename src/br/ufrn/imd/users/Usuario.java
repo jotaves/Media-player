@@ -2,8 +2,8 @@ package br.ufrn.imd.users;
 
 public abstract class Usuario {
 
-    private String nome;
-    private String senha;
+    protected String nome;
+    protected String senha;
 
     public Usuario(String nome, String senha) {
         this.nome = nome;
@@ -24,6 +24,15 @@ public abstract class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public boolean ePremium() {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " " + senha;
     }
 
 }

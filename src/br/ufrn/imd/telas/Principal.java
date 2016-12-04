@@ -6,17 +6,20 @@
 package br.ufrn.imd.telas;
 
 import br.ufrn.imd.controle.BancoMusicas;
+import br.ufrn.imd.controle.BancoPlaylist;
 import br.ufrn.imd.musica.Musica;
+import br.ufrn.imd.musica.Playlist;
 import br.ufrn.imd.musica.Tocador;
+import br.ufrn.imd.users.Usuario;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -26,45 +29,58 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Principal extends javax.swing.JFrame {
 
+    private Usuario usuario;
     private String caminho;
     private Thread thMusica;
+    private Thread thPlaylist;
     private int estado; //0-parado, 1-pausado, 2-tocando
     private DefaultListModel listModel;
-    private BancoMusicas bm;
+    private DefaultListModel listModelpl;
+    private DefaultListModel listModelMusicaspl;
+    private static BancoMusicas bm;
+    private static BancoPlaylist bpl;
 
     /**
      * Creates new form Principal
      *
      * @throws java.io.IOException
      */
-    public Principal() throws IOException {
+    public Principal(Usuario usuario) throws IOException {
         initComponents();
+        this.usuario = usuario;
         this.estado = 0;
         btnParar.setEnabled(false);
         btnPausar.setEnabled(false);
         btnPlay.setEnabled(false);
+        btnProx.setEnabled(false);
+        BtnAnt.setEnabled(false);
+
+        lblNomeUsuario.setText("Usuário: " + this.usuario.getNome());
 
         listModel = new DefaultListModel();
         ListaMusicas.setModel(listModel);
         ListaMusicas.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        bm = new BancoMusicas();
-        ArrayList<String> d = bm.getListDiretorio();
-        for (String nome : d) {
-            if (nome.endsWith(".mp3")) {
-                File arquivo = new File(nome);
-                File[] arquivosDir = arquivo.listFiles();
-                for (File musicaArq : arquivosDir) {
-                    listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
-                }
-            }
-        }
-        ArrayList<String> m = bm.getListMusicas();
-        for (String nome : m) {
-            listModel.addElement(new Musica(nome));
-        }
-        ListaMusicas.setModel(listModel);
+        listModelpl = new DefaultListModel();
+        ListaPlaylist.setModel(listModelpl);
+        ListaPlaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
+        listModelMusicaspl = new DefaultListModel();
+        ListaMusPlaylist.setModel(listModelMusicaspl);
+        ListaMusPlaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        bm = BancoMusicas.getInstance();
+        lerMusicas();
+
+        if (usuario.ePremium()) {
+            lblPremium.setText("Usuário Premium");
+            bpl = BancoPlaylist.getInstance();
+            listModelpl.clear();
+            bpl.carregarPlaylist(usuario);
+            lerPlaylists();
+        } else {
+            btnGerenciar.setEnabled(false);
+        }
     }
 
     /**
@@ -76,6 +92,7 @@ public class Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFrame1 = new javax.swing.JFrame();
         btnPlay = new javax.swing.JButton();
         btnParar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -89,9 +106,30 @@ public class Principal extends javax.swing.JFrame {
         ListaMusPlaylist = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         btnLimpar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        btnSair = new javax.swing.JButton();
+        lblNomeUsuario = new javax.swing.JLabel();
+        lblPremium = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        btnGerenciar = new javax.swing.JToggleButton();
+        BtnAnt = new javax.swing.JToggleButton();
+        btnProx = new javax.swing.JToggleButton();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MediaPlayer");
         setAutoRequestFocus(false);
+        setBackground(new java.awt.Color(200, 200, 200));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setResizable(false);
 
@@ -119,6 +157,11 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(ListaMusicas);
 
+        ListaPlaylist.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ListaPlaylistMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(ListaPlaylist);
 
         playlist.setText("Playlist");
@@ -149,59 +192,142 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Músicas na playlist");
+
+        btnSair.setText("Sair");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSairActionPerformed(evt);
+            }
+        });
+
+        lblNomeUsuario.setText("jLabel3");
+
+        lblPremium.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lblPremium.setForeground(new java.awt.Color(235, 195, 0));
+        lblPremium.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblPremium.setText("Usuario Premium");
+
+        btnGerenciar.setText("Gerenciar PlayLists");
+        btnGerenciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGerenciarActionPerformed(evt);
+            }
+        });
+
+        BtnAnt.setBackground(java.awt.Color.lightGray);
+        BtnAnt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/ufrn/imd/telas/fast-forward-arrows (outra cópia).png"))); // NOI18N
+        BtnAnt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        BtnAnt.setBorderPainted(false);
+        BtnAnt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAntActionPerformed(evt);
+            }
+        });
+
+        btnProx.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/ufrn/imd/telas/fast-forward-arrows (cópia).png"))); // NOI18N
+        btnProx.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnProx.setBorderPainted(false);
+        btnProx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnAbrir)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(51, Short.MAX_VALUE)
+                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(80, 80, 80)
-                        .addComponent(playlist, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 82, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAbrir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnLimpar)
+                        .addGap(24, 24, 24)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                    .addComponent(btnGerenciar)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(playlist, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(58, 58, 58)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSair))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 16, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnParar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(lblNomeUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BtnAnt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnPausar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(btnLimpar)))
-                .addGap(41, 41, 41))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblPremium))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(btnParar, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPausar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnProx, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(btnAbrir)
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPausar)
-                    .addComponent(btnParar))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNomeUsuario)
+                    .addComponent(lblPremium))
+                .addGap(21, 21, 21)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(playlist, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnPlay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(BtnAnt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnParar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnProx, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPausar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(playlist)
+                    .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnLimpar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAbrir)
+                    .addComponent(btnLimpar)
+                    .addComponent(btnGerenciar)
+                    .addComponent(btnSair))
                 .addContainerGap())
         );
 
@@ -216,26 +342,79 @@ public class Principal extends javax.swing.JFrame {
             estado = 2;
         } else if (estado == 0) {
             Tocador p1;
-            try {
-                p1 = new Tocador(this.caminho);
-                this.thMusica = new Thread(p1);
-                this.thMusica.start();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            if (!ListaPlaylist.isSelectionEmpty()) {
+
+                this.thPlaylist = new Thread(
+                        new Runnable() {
+                    public void run() {
+                        int index = ListaPlaylist.getSelectedIndex();
+                        Playlist atual = (Playlist) listModelpl.getElementAt(index);
+                        int size = atual.getMusicas().size();
+                        for (int i = ListaMusPlaylist.getSelectedIndex(); i < size; i++) {
+                            String caminho = atual.getMusicas().get(i).getCaminho();
+                            ListaMusPlaylist.setSelectedIndex(i);
+                            try {
+                                Tocador p2 = new Tocador(caminho);
+                                thMusica = new Thread(p2);
+                                thMusica.start();
+                                while (thMusica.isAlive());
+                            } catch (FileNotFoundException ex) {
+                                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                });
+                this.thPlaylist.start();
+                this.estado = 2;
+                btnParar.setEnabled(true);
+                btnPausar.setEnabled(true);
+                btnPlay.setEnabled(false);
+                btnProx.setEnabled(true);
+                BtnAnt.setEnabled(true);
+            } else {
+                try {
+                    p1 = new Tocador(this.caminho);
+                    this.thMusica = new Thread(p1);
+                    this.thMusica.start();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+            this.estado = 2;
+            btnParar.setEnabled(true);
+            btnPausar.setEnabled(true);
+            btnPlay.setEnabled(false);
+
         }
-        this.estado = 2;
-        btnParar.setEnabled(true);
-        btnPausar.setEnabled(true);
-        btnPlay.setEnabled(false);
-
-
+//        new Thread(
+//                new Runnable() {
+//            public void run() {
+//                while (true) {
+//                    if ((!thMusica.isAlive() && !thPlaylist.isAlive()) && estado != 0) {
+//                        estado = 0;
+//                        btnParar.setEnabled(false);
+//                        btnPausar.setEnabled(false);
+//                        break;
+//                    }
+//                    else if(!thMusica.isAlive() && !thPlaylist.isAlive()){
+//                        break;
+//                    }
+//                }
+//            }
+//
+//        }).start();
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPararActionPerformed
         if (estado != 0) {
-            this.thMusica.stop();
             this.estado = 0;
+            if (thMusica.isAlive()) {
+                this.thMusica.stop();
+            } else {
+                this.thPlaylist.stop();
+                this.thMusica.stop();
+                this.thPlaylist.stop();
+            }
             btnParar.setEnabled(false);
             btnPlay.setEnabled(true);
             btnPausar.setEnabled(false);
@@ -245,10 +424,15 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnPausarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPausarActionPerformed
         if (this.estado != 1) {
-            this.thMusica.suspend();
+            if (thMusica.isAlive()) {
+                this.thMusica.suspend();
+            } else {
+                this.thMusica.suspend();
+                this.thPlaylist.suspend();
+            }
             this.estado = 1;
-            btnPausar.setEnabled(false);
             btnPlay.setEnabled(true);
+            btnPausar.setEnabled(false);
         }
     }//GEN-LAST:event_btnPausarActionPerformed
 
@@ -267,14 +451,18 @@ public class Principal extends javax.swing.JFrame {
                     listModel.addElement(m);
                     try {
                         bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
+
                     } catch (IOException ex) {
-                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(Principal.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 try {
                     bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
+
                 } catch (IOException ex) {
-                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Principal.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
             } else {    //DIRETORIO
                 // Filtrar arquivos .mp3 de dentro do diretório.
@@ -290,9 +478,10 @@ public class Principal extends javax.swing.JFrame {
                 }
                 try {
                     bm.addDiretotio(arquivo.getSelectedFile().getAbsolutePath());
-                    System.out.println(arquivo.getSelectedFile().getAbsolutePath());
+
                 } catch (IOException ex) {
-                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Principal.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
             }
             ListaMusicas.setModel(listModel);
@@ -300,6 +489,10 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAbrirActionPerformed
 
     private void ListaMusicasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaMusicasMouseClicked
+        ListaPlaylist.clearSelection();
+        listModelMusicaspl.clear();
+        ListaMusPlaylist.setModel(listModelMusicaspl);
+
         int index = ListaMusicas.getSelectedIndex();
         Musica musica = (Musica) listModel.getElementAt(index);
         this.caminho = musica.getCaminho();
@@ -309,13 +502,111 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_ListaMusicasMouseClicked
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        // TODO add your handling code here:
+        FileWriter writer;
+        try {
+            
+            writer = new FileWriter("bancos/musicas.txt", false);
+            writer.write("");
+            writer.flush();
+            writer.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            writer = new FileWriter("bancos/diretorio.txt",false);
+            writer.write("");
+            writer.flush();
+            writer.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
+        BancoMusicas b;
+        try {
+            b = BancoMusicas.getInstance();
+            b.removerMusicas();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
+        listModel.clear();
+        ListaMusicas.setModel(listModel);
+
+        // Atualizar visualização na tela.
     }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        this.setVisible(false);
+        Login l;
+        try {
+            l = new Login();
+            l.setVisible(true);
+            BancoMusicas b = BancoMusicas.getInstance();
+            b.removerMusicas();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        thMusica.stop();
+    }//GEN-LAST:event_btnSairActionPerformed
+
+    private void btnGerenciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerenciarActionPerformed
+        AdmPlaylist p;
+        try {
+            p = new AdmPlaylist(this.usuario);
+            p.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.disable();
+        this.setVisible(false);
+    }//GEN-LAST:event_btnGerenciarActionPerformed
+
+    private void ListaPlaylistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaPlaylistMouseClicked
+        ListaMusicas.clearSelection();
+
+        int index = ListaPlaylist.getSelectedIndex();
+        Playlist playlist = (Playlist) listModelpl.getElementAt(index);
+        listModelMusicaspl.clear();
+        for (Musica m : playlist.getMusicas()) {
+            listModelMusicaspl.addElement(m);
+        }
+        ListaMusPlaylist.setModel(listModelMusicaspl);
+        ListaMusPlaylist.setSelectedIndex(0);
+        if (estado == 0) {
+            btnPlay.setEnabled(true);
+        }
+    }//GEN-LAST:event_ListaPlaylistMouseClicked
+
+    private void btnProxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProxActionPerformed
+        int index = ListaMusPlaylist.getSelectedIndex();
+        ListaMusPlaylist.setSelectedIndex(++index);
+
+        thPlaylist.stop();
+        thMusica.stop();
+        this.estado = 0;
+
+        btnPlayActionPerformed(evt);
+    }//GEN-LAST:event_btnProxActionPerformed
+
+    private void BtnAntActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAntActionPerformed
+        int index = ListaMusPlaylist.getSelectedIndex();
+        ListaMusPlaylist.setSelectedIndex(--index);
+
+    }//GEN-LAST:event_BtnAntActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[], Usuario usuario) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -326,16 +617,24 @@ public class Principal extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Principal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Principal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Principal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Principal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -343,9 +642,11 @@ public class Principal extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new Principal().setVisible(true);
+                    new Principal(usuario).setVisible(true);
+
                 } catch (IOException ex) {
-                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Principal.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -361,18 +662,54 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton BtnAnt;
     private javax.swing.JList<String> ListaMusPlaylist;
     private javax.swing.JList<String> ListaMusicas;
     private javax.swing.JList<String> ListaPlaylist;
     private javax.swing.JButton btnAbrir;
+    private javax.swing.JToggleButton btnGerenciar;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnParar;
     private javax.swing.JButton btnPausar;
     private javax.swing.JButton btnPlay;
+    private javax.swing.JToggleButton btnProx;
+    private javax.swing.JButton btnSair;
+    private javax.swing.JFrame jFrame1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblNomeUsuario;
+    private javax.swing.JLabel lblPremium;
     private javax.swing.JLabel playlist;
     // End of variables declaration//GEN-END:variables
+
+    private void lerMusicas() throws IOException {
+        ArrayList<String> d = bm.getListDiretorio();
+        for (String nome : d) {
+            File arquivo = new File(nome);
+            File[] arquivosDir = arquivo.listFiles();
+            for (File musicaArq : arquivosDir) {
+                if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
+                    listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
+                }
+            }
+        }
+        ArrayList<String> m = bm.getListMusicas();
+        for (String nome : m) {
+            listModel.addElement(new Musica(nome));
+        }
+        ListaMusicas.setModel(listModel);
+
+    }
+
+    private void lerPlaylists() {
+        ArrayList<Playlist> playlists = bpl.getPlaylists();
+        for (Playlist p : playlists) {
+            listModelpl.addElement(p);
+        }
+        ListaPlaylist.setModel(listModelpl);
+    }
 }

@@ -19,25 +19,36 @@ public class UsuarioPremium extends Usuario {
     public UsuarioPremium(String nome, String senha) {
         super(nome, senha);
     }
-    
+
     public void addPlaylist(Playlist p) {
         playlists.add(p);
     }
-    
-    public void removePlaylist(Playlist p){
+
+    public void removePlaylist(Playlist p) {
         playlists.remove(p);
     }
 
     public ArrayList<Playlist> getPlaylists() {
         return playlists;
     }
-    
+
     public Playlist getPlaylist(Playlist p) {
-        for(Playlist pl : playlists) {
+        for (Playlist pl : playlists) {
             if (pl == p) {
                 return p;
             }
         }
         return null;
     }
+
+    @Override
+    public boolean ePremium() {
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " true"; //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -1,3 +1,4 @@
-admin admin true
-jotave 123abc true
-pedro p3dr0 false
+admin admin true playlist0.txt
+pedro 1 true playlist1.txt
+jotave 1 true
+irene xadrez true
