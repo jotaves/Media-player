@@ -9,15 +9,15 @@ package br.imd.Arvore;
  * @param <T>
  *            Uma tipo qualquer q queira ser armazenado no nó.
  */
-public class Node<T> {
-	private Node<T> l;
-	private Node<T> r;
+public class NodeArvore<T> {
+	private NodeArvore<T> l;
+	private NodeArvore<T> r;
 	private T obj;
 
 	/**
 	 * Construtor vazio da classe Node
 	 */
-	public Node() {
+	public NodeArvore() {
 		this.l = null;
 		this.r = null;
 		this.obj = null;
@@ -29,7 +29,7 @@ public class Node<T> {
 	 * @param obj
 	 *            O objeto do tipo T a ser armazenado.
 	 */
-	public Node(T obj) {
+	public NodeArvore(T obj) {
 		this.l = null;
 		this.r = null;
 		this.obj = obj;
@@ -59,7 +59,7 @@ public class Node<T> {
 	 * 
 	 * @return Filho do lado esquerdo do nó
 	 */
-	public Node<T> getLeft() {
+	public NodeArvore<T> getLeft() {
 		return this.l;
 	}
 
@@ -68,7 +68,7 @@ public class Node<T> {
 	 * 
 	 * @return Filho do lado direito do nó
 	 */
-	public Node<T> getRight() {
+	public NodeArvore<T> getRight() {
 		return this.r;
 	}
 
@@ -78,7 +78,7 @@ public class Node<T> {
 	 * @param newNode
 	 *            Filho que será colocado do lado esquero do nó
 	 */
-	public void setLeft(Node<T> newNode) {
+	public void setLeft(NodeArvore<T> newNode) {
 		this.l = newNode;
 	}
 
@@ -88,7 +88,7 @@ public class Node<T> {
 	 * @param newNode
 	 *            Filho que será colocado do lado direito do nó
 	 */
-	public void setRight(Node<T> newNode) {
+	public void setRight(NodeArvore<T> newNode) {
 		this.r = newNode;
 	}
 };

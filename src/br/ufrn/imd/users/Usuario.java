@@ -1,6 +1,6 @@
 package br.ufrn.imd.users;
 
-public abstract class Usuario {
+public abstract class Usuario implements Comparable<Usuario>{
 
     protected String nome;
     protected String senha;
@@ -33,6 +33,11 @@ public abstract class Usuario {
     @Override
     public String toString() {
         return nome + " " + senha;
+    }
+
+    @Override
+    public int compareTo(Usuario o) {
+        return this.nome.compareTo(o.getNome());
     }
 
 }

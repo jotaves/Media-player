@@ -2,3 +2,4 @@ admin admin true
 pedro 1 true
 jotave 1 true
 irene xadrez true
+jtv test true
