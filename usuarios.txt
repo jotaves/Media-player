@@ -1,4 +1,0 @@
-admin admin true playlist0.txt
-pedro 1 true playlist1.txt
-jotave 1 true
-irene xadrez true

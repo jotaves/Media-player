@@ -341,8 +341,6 @@ public class Principal extends javax.swing.JFrame {
             this.thMusica.resume();
             estado = 2;
         } else if (estado == 0) {
-            thMusica.stop();
-            thPlaylist.stop();
             Tocador p1;
             if (!ListaPlaylist.isSelectionEmpty()) {
                 this.estado = 2;
@@ -698,10 +696,12 @@ public class Principal extends javax.swing.JFrame {
         for (String nome : d) {
             File arquivo = new File(nome);
             File[] arquivosDir = arquivo.listFiles();
+            if (arquivosDir != null) {
             for (File musicaArq : arquivosDir) {
                 if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
                     listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
                 }
+            }
             }
         }
         ArrayList<String> m = bm.getListMusicas();
