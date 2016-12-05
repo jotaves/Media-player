@@ -49,11 +49,13 @@ public class Principal extends javax.swing.JFrame {
         initComponents();
         this.usuario = usuario;
         this.estado = 0;
+
         btnParar.setEnabled(false);
         btnPausar.setEnabled(false);
         btnPlay.setEnabled(false);
         btnProx.setEnabled(false);
         BtnAnt.setEnabled(false);
+//        if (!usuario.ePremium()) btnGerenciar.setVisible(false);
 
         lblNomeUsuario.setText("Usuário: " + this.usuario.getNome());
 
@@ -70,6 +72,7 @@ public class Principal extends javax.swing.JFrame {
         ListaMusPlaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         bm = BancoMusicas.getInstance();
+
         lerMusicas();
 
         if (usuario.ePremium()) {
@@ -79,6 +82,7 @@ public class Principal extends javax.swing.JFrame {
             bpl.carregarPlaylist(usuario);
             lerPlaylists();
         } else {
+            lblPremium.setText("");
             btnGerenciar.setEnabled(false);
         }
     }
@@ -336,27 +340,25 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-
         if (estado == 1) {
-            this.thMusica.resume();
-            estado = 2;
+            if (thMusica != null && thMusica.isAlive()) {
+                this.thMusica.resume();
+            }
+
+            if (thPlaylist != null && thPlaylist.isAlive()) {
+                btnProx.setEnabled(true);
+                BtnAnt.setEnabled(true);
+            }
         } else if (estado == 0) {
             Tocador p1;
             if (!ListaPlaylist.isSelectionEmpty()) {
-                this.estado = 2;
-                btnParar.setEnabled(true);
-                btnPausar.setEnabled(true);
-                btnPlay.setEnabled(false);
-                btnProx.setEnabled(true);
-                BtnAnt.setEnabled(true);
-
                 this.thPlaylist = new Thread(
                         new Runnable() {
                     public void run() {
                         int index = ListaPlaylist.getSelectedIndex();
                         Playlist atual = (Playlist) listModelpl.getElementAt(index);
                         int size = atual.getMusicas().size();
-                        for (int i = ListaMusPlaylist.getSelectedIndex(); i < size; i++) {
+                        for (int i = ListaMusPlaylist.getSelectedIndex(); i < size; i = ((i + 1) % size)) {
                             String caminho = atual.getMusicas().get(i).getCaminho();
                             ListaMusPlaylist.setSelectedIndex(i);
                             try {
@@ -371,7 +373,6 @@ public class Principal extends javax.swing.JFrame {
                     }
                 });
                 this.thPlaylist.start();
-
             } else {
                 try {
                     p1 = new Tocador(this.caminho);
@@ -381,11 +382,19 @@ public class Principal extends javax.swing.JFrame {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            this.estado = 2;
-            btnParar.setEnabled(true);
-            btnPausar.setEnabled(true);
-            btnPlay.setEnabled(false);
+        }
 
+        this.estado = 2;
+        btnParar.setEnabled(true);
+        btnPausar.setEnabled(true);
+        btnPlay.setEnabled(false);
+
+        if (thPlaylist != null && thPlaylist.isAlive()) {
+            btnProx.setEnabled(true);
+            BtnAnt.setEnabled(true);
+        } else {
+            btnProx.setEnabled(false);
+            BtnAnt.setEnabled(false);
         }
 //        new Thread(
 //                new Runnable() {
@@ -408,30 +417,40 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPararActionPerformed
         if (estado != 0) {
-            this.estado = 0;
-            if (thMusica.isAlive()) {
+            if (thMusica != null && thMusica.isAlive()) {
                 this.thMusica.stop();
+
+                if (thPlaylist != null && thPlaylist.isAlive()) {
+                    this.thPlaylist.stop();
+                }
             } else {
                 this.thPlaylist.stop();
                 this.thMusica.stop();
             }
+
+            this.estado = 0;
             btnParar.setEnabled(false);
             btnPlay.setEnabled(true);
             btnPausar.setEnabled(false);
-
         }
     }//GEN-LAST:event_btnPararActionPerformed
 
     private void btnPausarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPausarActionPerformed
         if (this.estado != 1) {
-            if (thMusica.isAlive()) {
+            if (thMusica != null && thMusica.isAlive()) {
                 this.thMusica.suspend();
+
+                if (thPlaylist != null && thPlaylist.isAlive()) {
+                    this.thPlaylist.suspend();
+                }
             } else {
                 this.thMusica.suspend();
                 this.thPlaylist.suspend();
             }
+
             this.estado = 1;
             btnPlay.setEnabled(true);
+            btnParar.setEnabled(true);
             btnPausar.setEnabled(false);
         }
     }//GEN-LAST:event_btnPausarActionPerformed
@@ -548,19 +567,30 @@ public class Principal extends javax.swing.JFrame {
         try {
             l = new Login();
             l.setVisible(true);
-            BancoMusicas b = BancoMusicas.getInstance();
-            b.removerMusicas();
+            //BancoMusicas b = BancoMusicas.getInstance();
+            //b.removerMusicas();
 
         } catch (IOException ex) {
             Logger.getLogger(Principal.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-        thMusica.stop();
+        if (thMusica != null && thMusica.isAlive()) {
+            thMusica.stop();
+        }
+        if (thPlaylist != null && thPlaylist.isAlive()) {
+            thPlaylist.stop();
+        }
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnGerenciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerenciarActionPerformed
         AdmPlaylist p;
         try {
+            if (thMusica != null && thMusica.isAlive()) {
+                thMusica.stop();
+            }
+            if (thPlaylist != null && thPlaylist.isAlive()) {
+                thPlaylist.stop();
+            }
             p = new AdmPlaylist(this.usuario);
             p.setVisible(true);
         } catch (IOException ex) {
@@ -594,6 +624,12 @@ public class Principal extends javax.swing.JFrame {
         thMusica.stop();
         this.estado = 0;
 
+        btnPlay.setEnabled(false);
+        btnPausar.setEnabled(true);
+        btnParar.setEnabled(true);
+        btnProx.setEnabled(true);
+        BtnAnt.setEnabled(true);
+
         btnPlayActionPerformed(evt);
     }//GEN-LAST:event_btnProxActionPerformed
 
@@ -604,6 +640,12 @@ public class Principal extends javax.swing.JFrame {
         thPlaylist.stop();
         thMusica.stop();
         this.estado = 0;
+
+        btnPlay.setEnabled(false);
+        btnPausar.setEnabled(true);
+        btnParar.setEnabled(true);
+        btnProx.setEnabled(true);
+        BtnAnt.setEnabled(true);
 
         btnPlayActionPerformed(evt);
     }//GEN-LAST:event_BtnAntActionPerformed
@@ -692,30 +734,38 @@ public class Principal extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void lerMusicas() throws IOException {
+        ArrayList<String> m = bm.getListMusicas();
+        for (String nome : m) {
+            Musica mus = new Musica(nome);
+            if (!listModel.contains(mus)) {
+                listModel.addElement(mus);
+            }
+        }
+
         ArrayList<String> d = bm.getListDiretorio();
         for (String nome : d) {
             File arquivo = new File(nome);
             File[] arquivosDir = arquivo.listFiles();
             if (arquivosDir != null) {
-            for (File musicaArq : arquivosDir) {
-                if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
-                    listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
+                for (File musicaArq : arquivosDir) {
+                    if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
+                        Musica mus = new Musica(musicaArq.getAbsolutePath());
+                        if (!listModel.contains(mus)) {
+                            listModel.addElement(mus);
+                        }
+                    }
                 }
             }
-            }
-        }
-        ArrayList<String> m = bm.getListMusicas();
-        for (String nome : m) {
-            listModel.addElement(new Musica(nome));
         }
         ListaMusicas.setModel(listModel);
-
     }
 
     private void lerPlaylists() {
         ArrayList<Playlist> playlists = bpl.getPlaylists();
         for (Playlist p : playlists) {
-            listModelpl.addElement(p);
+            if (!listModel.contains(p)) {
+                listModelpl.addElement(p);
+            }
         }
         ListaPlaylist.setModel(listModelpl);
     }

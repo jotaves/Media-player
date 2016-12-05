@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.imd.trie;
+package br.ufrn.imd.estrututas;
 
-import com.sun.org.apache.xml.internal.utils.Trie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +19,7 @@ public class PrincipalTrie {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Trie trie = new Trie();
+        TADTrie trie = new TADTrie();
         trie.inserir("João");
         trie.inserir("Joana");
         trie.inserir("Maria");

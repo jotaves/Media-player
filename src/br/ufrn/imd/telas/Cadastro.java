@@ -46,12 +46,12 @@ public class Cadastro extends javax.swing.JFrame {
         btnCadastro = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
         txtUsuario = new javax.swing.JTextField();
-        txtSenha = new javax.swing.JTextField();
-        txtSenhaConf = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         lblErro = new javax.swing.JLabel();
         isPremium = new javax.swing.JCheckBox();
+        txtSenha = new javax.swing.JPasswordField();
+        txtSenhaConf = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,18 +77,6 @@ public class Cadastro extends javax.swing.JFrame {
             }
         });
 
-        txtSenha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSenhaActionPerformed(evt);
-            }
-        });
-
-        txtSenhaConf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSenhaConfActionPerformed(evt);
-            }
-        });
-
         jLabel2.setText("Senha:");
 
         jLabel3.setText("Confirmar senha:");
@@ -99,6 +87,20 @@ public class Cadastro extends javax.swing.JFrame {
         isPremium.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 isPremiumActionPerformed(evt);
+            }
+        });
+
+        txtSenha.setText("jPasswordField1");
+        txtSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSenhaActionPerformed(evt);
+            }
+        });
+
+        txtSenhaConf.setText("jPasswordField1");
+        txtSenhaConf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSenhaConfActionPerformed(evt);
             }
         });
 
@@ -117,11 +119,18 @@ public class Cadastro extends javax.swing.JFrame {
                         .addGap(68, 68, 68)
                         .addComponent(btnCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(txtUsuario)
-                    .addComponent(txtSenha)
-                    .addComponent(txtSenhaConf)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
                 .addGap(30, 30, 30))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(txtSenhaConf, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,12 +141,12 @@ public class Cadastro extends javax.swing.JFrame {
                 .addComponent(txtUsuario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(2, 2, 2)
-                .addComponent(txtSenha)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSenhaConf)
+                .addComponent(txtSenhaConf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addComponent(isPremium, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -152,10 +161,6 @@ public class Cadastro extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtSenhaActionPerformed
 
     private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
         // TODO add your handling code here:
@@ -201,13 +206,17 @@ public class Cadastro extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCadastroActionPerformed
 
-    private void txtSenhaConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaConfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtSenhaConfActionPerformed
-
     private void isPremiumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isPremiumActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_isPremiumActionPerformed
+
+    private void txtSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSenhaActionPerformed
+
+    private void txtSenhaConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaConfActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSenhaConfActionPerformed
 
     /**
      * @param args the command line arguments
@@ -252,8 +261,8 @@ public class Cadastro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lblErro;
-    private javax.swing.JTextField txtSenha;
-    private javax.swing.JTextField txtSenhaConf;
+    private javax.swing.JPasswordField txtSenha;
+    private javax.swing.JPasswordField txtSenhaConf;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 

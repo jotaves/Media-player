@@ -243,7 +243,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
     private void btnAdicionarMsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarMsActionPerformed
         int indexMu = ListaMusicas.getSelectedIndex();
         int indexPl = ListaPlaylist.getSelectedIndex();
-        
+
         Playlist p = (Playlist) listModelpl.getElementAt(indexPl);
         Musica m = (Musica) listModel.getElementAt(indexMu);
         try {
@@ -253,8 +253,8 @@ public class AdmPlaylist extends javax.swing.JFrame {
         }
         listModelMusicaspl.addElement(m);
         ListaMusPlaylist.setModel(listModelMusicaspl);
-        
-        
+
+
     }//GEN-LAST:event_btnAdicionarMsActionPerformed
 
     private void btnAdicionarPLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarPLActionPerformed
@@ -282,7 +282,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
             Logger.getLogger(AdmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.setVisible(false);
-        
+
     }//GEN-LAST:event_btnOKActionPerformed
 
     private void ListaPlaylistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaPlaylistMouseClicked
@@ -383,13 +383,19 @@ public class AdmPlaylist extends javax.swing.JFrame {
             File[] arquivosDir = arquivo.listFiles();
             for (File musicaArq : arquivosDir) {
                 if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
-                    listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
+                    Musica mus = new Musica(musicaArq.getAbsolutePath());
+                    if (!listModel.contains(mus)) {
+                        listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
+                    }
                 }
             }
         }
         ArrayList<String> m = bm.getListMusicas();
         for (String nome : m) {
-            listModel.addElement(new Musica(nome));
+            Musica mus = new Musica(nome);
+            if (listModel.contains(mus)) {
+                listModel.addElement(new Musica(nome));
+            }
         }
         ListaMusicas.setModel(listModel);
 

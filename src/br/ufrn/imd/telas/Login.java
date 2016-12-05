@@ -5,6 +5,7 @@
  */
 package br.ufrn.imd.telas;
 
+import br.ufrn.imd.controle.BancoMusicas;
 import br.ufrn.imd.controle.BancoUsuario;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;

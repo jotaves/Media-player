@@ -20,17 +20,17 @@ import java.util.ArrayList;
  * @author pedroarthur-mf
  */
 public class BancoMusicas {
-    
+
     private static BancoMusicas uniqueInstance;
     private static File diretorio;
     private static File musicas;
     private static ArrayList<String> listDiretorio;
     private static ArrayList<String> listMusicas;
-    
+
     private BancoMusicas() {
-        
+
     }
-    
+
     public static synchronized BancoMusicas getInstance() throws IOException {
         if (uniqueInstance == null) {
             uniqueInstance = new BancoMusicas();
@@ -38,12 +38,12 @@ public class BancoMusicas {
             musicas = new File("bancos/musicas.txt");
             listDiretorio = new ArrayList<String>();
             listMusicas = new ArrayList<String>();
+            lerDiretorios();
+            lerMusicas();
         }
-        lerDiretorios();
-        lerMusicas();
         return uniqueInstance;
     }
-    
+
     private static void lerDiretorios() throws FileNotFoundException, IOException {
         FileReader fileReader = new FileReader(diretorio);
         BufferedReader reader = new BufferedReader(fileReader);
@@ -53,7 +53,7 @@ public class BancoMusicas {
         }
         reader.close();
     }
-    
+
     public ArrayList getListDiretorio() {
         return listDiretorio;
     }
@@ -71,7 +71,7 @@ public class BancoMusicas {
             writer.close();
         }
     }
-    
+
     private static void lerMusicas() throws FileNotFoundException, IOException {
         FileReader fileReader = new FileReader(musicas);
         BufferedReader reader = new BufferedReader(fileReader);
@@ -81,15 +81,15 @@ public class BancoMusicas {
                 listMusicas.add(data);
             }
         }
-        
+
         reader.close();
-        
+
     }
-    
+
     public ArrayList getListMusicas() {
         return listMusicas;
     }
-    
+
     public void addMusicas(String caminho) throws IOException {
         if (!listMusicas.contains(caminho)) {
             FileWriter writer = new FileWriter(this.musicas, true);
@@ -103,11 +103,11 @@ public class BancoMusicas {
             listMusicas.add(caminho);
         }
     }
-    
+
     public void removerMusicas() {
         listMusicas = new ArrayList<>();
         listDiretorio = new ArrayList<>();
-        
+
     }
-    
+
 }
