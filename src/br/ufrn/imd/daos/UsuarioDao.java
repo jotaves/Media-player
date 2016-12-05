@@ -3,37 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.imd.controle;
+package br.ufrn.imd.daos;
 
 import br.imd.Arvore.NodeArvore;
 import br.imd.Arvore.TADArvore;
-import br.ufrn.imd.trie.Node;
+import br.ufrn.imd.interfaces.GenericDao;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;
-import java.util.ArrayList;
 
 /**
  *
  * @author jotave
  */
-public class BancoUsuario {
+public class UsuarioDao implements GenericDao {
 
     private static TADArvore<Usuario> usuarios;
-    private static BancoUsuario uniqueInstance;
+    private static UsuarioDao uniqueInstance;
 
-    BancoUsuario() {
+    UsuarioDao() {
     }
 
-    public static synchronized BancoUsuario getInstance() {
+    public static synchronized UsuarioDao getInstance() {
         if (uniqueInstance == null) {
-            uniqueInstance = new BancoUsuario();
+            uniqueInstance = new UsuarioDao();
             usuarios = new TADArvore<>();
         }
         return uniqueInstance;
-    }
-
-    public void adicionarUsuario(Usuario u) {
-        usuarios.inserir(u);
     }
 
     public boolean verificarUsuario(String nome) {
@@ -72,5 +67,15 @@ public class BancoUsuario {
 
     public TADArvore<Usuario> getUsuarios() {
         return usuarios;
+    }
+
+    @Override
+    public boolean adicionar(Object o) {
+        return usuarios.inserir((Usuario) o);
+    }
+
+    @Override
+    public void remover(Object o) {
+        usuarios.remover((Usuario) o);
     }
 }

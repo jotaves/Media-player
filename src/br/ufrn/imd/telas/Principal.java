@@ -5,8 +5,8 @@
  */
 package br.ufrn.imd.telas;
 
-import br.ufrn.imd.controle.BancoMusicas;
-import br.ufrn.imd.controle.BancoPlaylist;
+import br.ufrn.imd.daos.MusicasDao;
+import br.ufrn.imd.daos.PlaylistsDao;
 import br.ufrn.imd.musica.Musica;
 import br.ufrn.imd.musica.Playlist;
 import br.ufrn.imd.musica.Tocador;
@@ -37,8 +37,8 @@ public class Principal extends javax.swing.JFrame {
     private DefaultListModel listModel;
     private DefaultListModel listModelpl;
     private DefaultListModel listModelMusicaspl;
-    private static BancoMusicas bm;
-    private static BancoPlaylist bpl;
+    private static MusicasDao bm;
+    private static PlaylistsDao bpl;
 
     /**
      * Creates new form Principal
@@ -71,13 +71,13 @@ public class Principal extends javax.swing.JFrame {
         ListaMusPlaylist.setModel(listModelMusicaspl);
         ListaMusPlaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        bm = BancoMusicas.getInstance();
+        bm = MusicasDao.getInstance();
 
         lerMusicas();
 
         if (usuario.ePremium()) {
             lblPremium.setText("Usuário Premium");
-            bpl = BancoPlaylist.getInstance();
+            bpl = PlaylistsDao.getInstance();
             listModelpl.clear();
             bpl.carregarPlaylist(usuario);
             lerPlaylists();
@@ -468,21 +468,9 @@ public class Principal extends javax.swing.JFrame {
                 Musica m = new Musica(arquivo.getSelectedFile().getAbsolutePath());
                 if (!isOnList(m)) {
                     listModel.addElement(m);
-                    try {
-                        bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
-
-                    } catch (IOException ex) {
-                        Logger.getLogger(Principal.class
-                                .getName()).log(Level.SEVERE, null, ex);
-                    }
+                    bm.adicionar(arquivo.getSelectedFile().getAbsolutePath());
                 }
-                try {
-                    bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
-
-                } catch (IOException ex) {
-                    Logger.getLogger(Principal.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                }
+                bm.adicionar(arquivo.getSelectedFile().getAbsolutePath());
             } else {    //DIRETORIO
                 // Filtrar arquivos .mp3 de dentro do diretório.
                 File[] arquivosDir = arquivo.getSelectedFile().listFiles();
@@ -496,7 +484,7 @@ public class Principal extends javax.swing.JFrame {
                     }
                 }
                 try {
-                    bm.addDiretotio(arquivo.getSelectedFile().getAbsolutePath());
+                    bm.adicionarDiretorio(arquivo.getSelectedFile().getAbsolutePath());
 
                 } catch (IOException ex) {
                     Logger.getLogger(Principal.class
@@ -545,10 +533,10 @@ public class Principal extends javax.swing.JFrame {
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
-        BancoMusicas b;
+        MusicasDao b;
         try {
-            b = BancoMusicas.getInstance();
-            b.removerMusicas();
+            b = MusicasDao.getInstance();
+            b.removerTudo();
 
         } catch (IOException ex) {
             Logger.getLogger(Principal.class

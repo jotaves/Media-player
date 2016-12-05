@@ -5,8 +5,8 @@
  */
 package br.ufrn.imd.telas;
 
-import br.ufrn.imd.controle.BancoMusicas;
-import br.ufrn.imd.controle.BancoPlaylist;
+import br.ufrn.imd.daos.MusicasDao;
+import br.ufrn.imd.daos.PlaylistsDao;
 import br.ufrn.imd.musica.Musica;
 import br.ufrn.imd.musica.Playlist;
 import br.ufrn.imd.users.Usuario;
@@ -26,8 +26,8 @@ import javax.swing.ListSelectionModel;
 public class AdmPlaylist extends javax.swing.JFrame {
 
     private Usuario usuario;
-    private BancoMusicas bm;
-    private BancoPlaylist bpl;
+    private MusicasDao bm;
+    private PlaylistsDao bpl;
     private DefaultListModel listModel;
     private DefaultListModel listModelpl;
     private DefaultListModel listModelMusicaspl;
@@ -51,10 +51,10 @@ public class AdmPlaylist extends javax.swing.JFrame {
         ListaMusPlaylist.setModel(listModelMusicaspl);
         ListaMusPlaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        bm = BancoMusicas.getInstance();
+        bm = MusicasDao.getInstance();
         lerMusicas();
 
-        bpl = BancoPlaylist.getInstance();
+        bpl = PlaylistsDao.getInstance();
         bpl.carregarPlaylist(usuario);
         lerPlaylists();
     }
@@ -265,10 +265,11 @@ public class AdmPlaylist extends javax.swing.JFrame {
 
     private void btnAdicionarPLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarPLActionPerformed
         Playlist p;
-        if (txtNovaPlaylist.getText().equals("")) {
+        
+        if (!txtNovaPlaylist.getText().equals("")) {
             try {
                 p = new Playlist(txtNovaPlaylist.getText(), (UsuarioPremium) this.usuario);
-                if (bpl.adicionarPlaylist(p)) {
+                if (bpl.adicionar(p)) {
                     listModelpl.addElement(p);
                 }
             } catch (IOException ex) {
@@ -296,21 +297,22 @@ public class AdmPlaylist extends javax.swing.JFrame {
 
     private void ListaPlaylistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaPlaylistMouseClicked
         int index = ListaPlaylist.getSelectedIndex();
-        Playlist playlist = (Playlist) listModelpl.getElementAt(index);
-        listModelMusicaspl.clear();
-        for (Musica m : playlist.getMusicas()) {
-            listModelMusicaspl.addElement(m);
+        if (index != -1) {
+            Playlist playlist = (Playlist) listModelpl.getElementAt(index);
+            listModelMusicaspl.clear();
+            for (Musica m : playlist.getMusicas()) {
+                listModelMusicaspl.addElement(m);
+            }
+            ListaMusPlaylist.setModel(listModelMusicaspl);
+            ListaMusPlaylist.setSelectedIndex(0);
         }
-        ListaMusPlaylist.setModel(listModelMusicaspl);
-        ListaMusPlaylist.setSelectedIndex(0);
-
     }//GEN-LAST:event_ListaPlaylistMouseClicked
 
     private void btnApagarPlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarPlActionPerformed
         int index = ListaPlaylist.getSelectedIndex();
         if (index != -1) {
             Playlist playlist = (Playlist) listModelpl.getElementAt(index);
-            bpl.removerPlaylist(playlist);
+            bpl.remover(playlist);
             listModelpl.remove(index);
         }
     }//GEN-LAST:event_btnApagarPlActionPerformed

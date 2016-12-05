@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.imd.controle;
+package br.ufrn.imd.daos;
 
+import br.ufrn.imd.interfaces.GenericDao;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,26 +13,28 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author pedroarthur-mf
  */
-public class BancoMusicas {
+public class MusicasDao implements GenericDao {
 
-    private static BancoMusicas uniqueInstance;
+    private static MusicasDao uniqueInstance;
     private static File diretorio;
     private static File musicas;
     private static ArrayList<String> listDiretorio;
     private static ArrayList<String> listMusicas;
 
-    private BancoMusicas() {
+    private MusicasDao() {
 
     }
 
-    public static synchronized BancoMusicas getInstance() throws IOException {
+    public static synchronized MusicasDao getInstance() throws IOException {
         if (uniqueInstance == null) {
-            uniqueInstance = new BancoMusicas();
+            uniqueInstance = new MusicasDao();
             diretorio = new File("bancos/diretorio.txt");
             musicas = new File("bancos/musicas.txt");
             listDiretorio = new ArrayList<String>();
@@ -57,7 +60,7 @@ public class BancoMusicas {
     }
 
     // Provavelmente com erros.
-    public void addDiretotio(String caminho) throws IOException {
+    public void adicionarDiretorio(String caminho) throws IOException {
         if (!listDiretorio.contains(caminho)) {
             FileWriter writer = new FileWriter(this.diretorio, true);
 //            for (String diretorio : listDiretorio) {
@@ -88,24 +91,34 @@ public class BancoMusicas {
         return listMusicas;
     }
 
-    public void addMusicas(String caminho) throws IOException {
+    @Override
+    public boolean adicionar(Object o) {
+        String caminho = (String) o;
         if (!listMusicas.contains(caminho)) {
-            FileWriter writer = new FileWriter(this.musicas, true);
-
-//            for (String musica : listMusicas) {
-//                writer.append(musica + "\n");
-//            }
-            writer.append(caminho + "\n");
-            writer.flush();
-            writer.close();
+            FileWriter writer;
+            try {
+                writer = new FileWriter(this.musicas, true);
+                writer.append(caminho + "\n");
+                writer.flush();
+                writer.close();                
+            } catch (IOException ex) {
+                Logger.getLogger(MusicasDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
             listMusicas.add(caminho);
+            return true;
         }
+        return false;
     }
 
-    public void removerMusicas() {
+    public void removerTudo() {
         listMusicas = new ArrayList<>();
         listDiretorio = new ArrayList<>();
+    }
 
+    @Override
+    public void remover(Object o) {
+        listMusicas.remove((String) o);
+        // Apagar do arquivo tbm.
     }
 
 }

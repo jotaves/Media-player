@@ -5,8 +5,8 @@
  */
 package br.ufrn.imd.telas;
 
-import br.ufrn.imd.controle.BancoMusicas;
-import br.ufrn.imd.controle.BancoUsuario;
+import br.ufrn.imd.daos.MusicasDao;
+import br.ufrn.imd.daos.UsuarioDao;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;
 import br.ufrn.imd.users.UsuarioPremium;
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class Login extends javax.swing.JFrame {
 
-    private BancoUsuario usuarios = BancoUsuario.getInstance();
+    private UsuarioDao usuarios = UsuarioDao.getInstance();
     private File file;
     private String caminho;
 
@@ -233,9 +233,9 @@ public class Login extends javax.swing.JFrame {
         while ((linha = reader.readLine()) != null) {
             String[] particoes = linha.split(" ");
             if (particoes[2].equals("true")) {
-                usuarios.adicionarUsuario(new UsuarioPremium(particoes[0], particoes[1]));
+                usuarios.adicionar(new UsuarioPremium(particoes[0], particoes[1]));
             } else {
-                usuarios.adicionarUsuario(new UsuarioComum(particoes[0], particoes[1]));
+                usuarios.adicionar(new UsuarioComum(particoes[0], particoes[1]));
             }
         }
     }
