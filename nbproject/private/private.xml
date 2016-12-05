@@ -3,21 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/controle/BancoMusicas.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/users/UsuarioComum.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/telas/AdmPlaylist.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/users/Usuario.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/musica/Tocador.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/musica/Musica.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/estrututas/PrincipalTrie.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/telas/Principal.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/musica/Playlist.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/users/UsuarioPremium.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/controle/BancoPlaylist.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/telas/Login.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/controle/BancoUsuario.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/telas/Cadastro.java</file>
-            <file>file:/home/pedroarthur-mf/media-player/src/br/ufrn/imd/estrututas/TADArvore.java</file>
+            <file>file:/home/jotave/Documentos/LP/media-player/src/br/ufrn/imd/telas/Principal.java</file>
+            <file>file:/home/jotave/Documentos/LP/media-player/src/br/ufrn/imd/telas/AdmPlaylist.java</file>
+            <file>file:/home/jotave/Documentos/LP/media-player/src/br/ufrn/imd/controle/BancoMusicas.java</file>
+            <file>file:/home/jotave/Documentos/LP/media-player/src/br/ufrn/imd/estrututas/PrincipalTrie.java</file>
+            <file>file:/home/jotave/Documentos/LP/media-player/src/br/ufrn/imd/telas/Login.java</file>
+            <file>file:/home/jotave/Documentos/LP/media-player/src/br/ufrn/imd/controle/BancoPlaylist.java</file>
+            <file>file:/home/jotave/Documentos/LP/media-player/src/br/ufrn/imd/telas/Cadastro.java</file>
         </group>
     </open-files>
 </project-private>
