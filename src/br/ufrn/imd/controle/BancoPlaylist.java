@@ -62,13 +62,10 @@ public class BancoPlaylist {
             }
             writer.flush();
             writer.close();
-
-            playlists.add(pl);
         }
     }
 
     public void carregarPlaylist(Usuario usuario) throws IOException {
-        playlists = new ArrayList<>();
         File f = new File("bancos");
         File[] arquivosPlayList = (f).listFiles();
         boolean plUsurio = false;
