@@ -5,8 +5,6 @@
  */
 package br.ufrn.imd.controle;
 
-import br.ufrn.imd.musica.Musica;
-import br.ufrn.imd.musica.Playlist;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;

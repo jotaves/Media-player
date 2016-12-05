@@ -323,6 +323,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
             Musica m = (Musica) listModelMusicaspl.getElementAt(indexMu);
             listModelMusicaspl.remove(indexMu);
             try {
+//                System.out.println("Deletar: " + m.getCaminho());
                 playlist.removerMusica(m);
             } catch (IOException ex) {
                 Logger.getLogger(AdmPlaylist.class.getName()).log(Level.SEVERE, null, ex);

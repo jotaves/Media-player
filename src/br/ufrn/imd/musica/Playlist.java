@@ -5,7 +5,6 @@
  */
 package br.ufrn.imd.musica;
 
-import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioPremium;
 import java.io.BufferedReader;
 import java.io.File;
@@ -63,18 +62,22 @@ public class Playlist {
     public void removerMusica(Musica m) throws FileNotFoundException, IOException {
         FileReader fileReader = new FileReader(file);
         BufferedReader reader = new BufferedReader(fileReader);
+
         String usuario = reader.readLine();
         String data = reader.readLine();
         ArrayList<String> novo = new ArrayList<>();
         while ((data = reader.readLine()) != null) {
-            if (!data.equals(m.getCaminho())) {
-                novo.add(m.getCaminho());
+            if (!(data.equals(m.getCaminho()))) {
+//                System.out.println("Não deletada: " + data);
+//                System.out.println("Para deletar: " + m.getCaminho());
+                novo.add(data);
             }
         }
         FileWriter writer = new FileWriter(file, false);
         writer.write(usuario + "\n");
         writer.write(this.nome + "\n");
         for (String nome : novo) {
+//            System.out.println(nome);
             writer.write(nome + "\n");
         }
         writer.flush();

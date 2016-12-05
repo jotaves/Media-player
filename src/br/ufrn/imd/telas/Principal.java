@@ -604,15 +604,17 @@ public class Principal extends javax.swing.JFrame {
         ListaMusicas.clearSelection();
 
         int index = ListaPlaylist.getSelectedIndex();
-        Playlist playlist = (Playlist) listModelpl.getElementAt(index);
-        listModelMusicaspl.clear();
-        for (Musica m : playlist.getMusicas()) {
-            listModelMusicaspl.addElement(m);
-        }
-        ListaMusPlaylist.setModel(listModelMusicaspl);
-        ListaMusPlaylist.setSelectedIndex(0);
-        if (estado == 0) {
-            btnPlay.setEnabled(true);
+        if (index != -1) {
+            Playlist playlist = (Playlist) listModelpl.getElementAt(index);
+            listModelMusicaspl.clear();
+            for (Musica m : playlist.getMusicas()) {
+                listModelMusicaspl.addElement(m);
+            }
+            ListaMusPlaylist.setModel(listModelMusicaspl);
+            ListaMusPlaylist.setSelectedIndex(0);
+            if (estado == 0) {
+                btnPlay.setEnabled(true);
+            }
         }
     }//GEN-LAST:event_ListaPlaylistMouseClicked
 
