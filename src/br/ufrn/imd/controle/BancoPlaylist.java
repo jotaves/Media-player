@@ -37,10 +37,13 @@ public class BancoPlaylist {
         return uniqueInstance;
     }
 
-    public void adicionarPlaylist(Playlist pl) throws IOException {
+    public boolean adicionarPlaylist(Playlist pl) throws IOException {
         if (!jaExiste(pl)) {
             criarPlaylist(pl);
             playlists.add(pl);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -56,7 +59,7 @@ public class BancoPlaylist {
             file.createNewFile();
             FileWriter writer = new FileWriter(file, true);
             writer.append(pl.getUsuario().getNome() + "\n");
-            writer.append(pl.getNome()+ "\n");
+            writer.append(pl.getNome() + "\n");
             for (Musica musica : pl.getMusicas()) {
                 writer.append("\n" + musica.getCaminho());
             }
@@ -66,6 +69,7 @@ public class BancoPlaylist {
     }
 
     public void carregarPlaylist(Usuario usuario) throws IOException {
+        playlists = new ArrayList<>(); // olhar isso direito amanhã
         File f = new File("bancos");
         File[] arquivosPlayList = (f).listFiles();
         boolean plUsurio = false;
