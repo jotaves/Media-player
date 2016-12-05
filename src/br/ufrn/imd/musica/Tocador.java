@@ -12,14 +12,22 @@ import java.util.logging.Logger;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
+/**
+ * Classe que implementa o Tocador que será executado quando for tocado uma
+ * música.
+ *
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
+ */
 public class Tocador implements Runnable {
 
     private FileInputStream arquivo = null;
     private Player musica;
 
     /**
+     * Construtor da classe.
      *
-     * @param caminho
+     * @param caminho Caminho do diretorio até o arquivo.
      * @throws FileNotFoundException
      */
     public Tocador(String caminho) throws FileNotFoundException {
@@ -31,6 +39,9 @@ public class Tocador implements Runnable {
 
     }
 
+    /**
+     * Executa quando Thread é chamada e inicializa a tocar uma msica.
+     */
     @Override
     public void run() {
         try {

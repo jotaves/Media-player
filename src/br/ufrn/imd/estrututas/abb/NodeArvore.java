@@ -1,4 +1,4 @@
-package br.imd.Arvore;
+package br.ufrn.imd.estrututas.abb;
 
 /**
  * Classe que implementa um nó de uma árvore.

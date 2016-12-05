@@ -1,4 +1,4 @@
-package br.imd.Arvore;
+package br.ufrn.imd.estrututas.abb;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -29,13 +29,14 @@ public class TADArvore<T extends Comparable<T>> {
 	 * @param t
 	 *            Nó que será inserido
 	 */
-	public void inserir(T t) {
+	public boolean inserir(T t) {
 		NodeArvore<T> n = new NodeArvore<T>(t);
 
 		if (raiz == null) {
 			this.raiz = n;
+                        return true;
 		} else {
-			this.inserir(raiz, n);
+			return this.inserir(raiz, n);
 		}
 	}
 
@@ -47,19 +48,22 @@ public class TADArvore<T extends Comparable<T>> {
 	 * @param n
 	 *            Nó a ser inserido
 	 */
-	private void inserir(NodeArvore<T> pai, NodeArvore<T> n) {
+	private boolean inserir(NodeArvore<T> pai, NodeArvore<T> n) {
 		// modificado
 		int compR = n.getConteudo().compareTo(pai.getConteudo());
 
 		if (compR < 0 && pai.getLeft() == null) {
 			pai.setLeft(n);
+                        return true;
 		} else if (compR < 0 && pai.getLeft() != null) {
 			inserir(pai.getLeft(), n);
 		} else if (compR > 0 && pai.getRight() == null) {
 			pai.setRight(n);
+                        return true;
 		} else if (compR > 0 && pai.getRight() != null) {
 			inserir(pai.getRight(), n);
 		}
+                return false;
 	}
 
 	/**

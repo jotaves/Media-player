@@ -7,7 +7,8 @@ package br.ufrn.imd.users;
 
 /**
  *
- * @author pedroarthur-mf
+ * @author Pedro Arthur Medeiros Fernades
+ * @author João Victor B. Barboza
  */
 public class UsuarioComum extends Usuario {
 

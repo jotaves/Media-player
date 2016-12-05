@@ -1,5 +1,9 @@
 package br.ufrn.imd.users;
-
+/**
+ *
+ * @author Pedro Arthur Medeiros Fernades
+ * @author João Victor B. Barboza
+ */
 public abstract class Usuario implements Comparable<Usuario>{
 
     protected String nome;

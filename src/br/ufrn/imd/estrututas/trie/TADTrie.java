@@ -3,23 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.imd.estrututas;
+package br.ufrn.imd.estrututas.trie;
 
 import java.util.Collection;
 import java.util.HashMap;
 
 /**
+ * Classe que implementa uma árvore Trie.
  *
- * @author jotave
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class TADTrie {
 
     private NodeTrie raiz;
 
+    /**
+     *
+     */
     public TADTrie() {
         raiz = new NodeTrie();
     }
 
+    /**
+     *
+     * @param s
+     */
     public void inserir(String s) {
         // Auxiliar para percorrer a árvore.
         HashMap<Character, NodeTrie> aux = raiz.getFilhos();
@@ -52,6 +61,11 @@ public class TADTrie {
         }
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public boolean buscar(String s) {
         NodeTrie n = buscarNodeTrie(s);
         if (n == null || !n.isFolha()) {
@@ -61,6 +75,11 @@ public class TADTrie {
         }
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public NodeTrie buscarNodeTrie(String s) {
         HashMap<Character, NodeTrie> aux = raiz.getFilhos();
         NodeTrie resultado = null;
@@ -82,6 +101,11 @@ public class TADTrie {
         return resultado;
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public boolean deletar(String s) {
         if (!buscar(s)) {
             return false;
@@ -113,6 +137,11 @@ public class TADTrie {
         }
     }
 
+    /**
+     *
+     * @param prefix
+     * @return
+     */
     public Collection<String> autoComplete(String prefix) {
         return raiz.autoComplete(prefix);
     }

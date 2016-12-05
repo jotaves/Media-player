@@ -5,7 +5,7 @@
  */
 package br.ufrn.imd.telas;
 
-import br.ufrn.imd.controle.BancoUsuario;
+import br.ufrn.imd.daos.UsuarioDao;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;
 import br.ufrn.imd.users.UsuarioPremium;
@@ -16,20 +16,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Classe que implementa a interface da tela de cadastro.
  *
- * @author jotave
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class Cadastro extends javax.swing.JFrame {
 
     private File file;
-    private BancoUsuario b;
+    private UsuarioDao b;
 
     /**
      * Creates new form Cadastro
      */
     public Cadastro() {
         this.file = new File("bancos/usuarios.txt");
-        b = BancoUsuario.getInstance();
+        b = UsuarioDao.getInstance();
         initComponents();
     }
 
@@ -54,6 +56,7 @@ public class Cadastro extends javax.swing.JFrame {
         txtSenhaConf = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cadastro");
 
         jLabel1.setText("Usuário:");
 
@@ -90,14 +93,12 @@ public class Cadastro extends javax.swing.JFrame {
             }
         });
 
-        txtSenha.setText("jPasswordField1");
         txtSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSenhaActionPerformed(evt);
             }
         });
 
-        txtSenhaConf.setText("jPasswordField1");
         txtSenhaConf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSenhaConfActionPerformed(evt);
@@ -112,25 +113,18 @@ public class Cadastro extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblErro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(isPremium, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(68, 68, 68)
                         .addComponent(btnCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(txtUsuario)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblErro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(isPremium, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSenhaConf, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(txtSenhaConf, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -270,7 +264,7 @@ public class Cadastro extends javax.swing.JFrame {
         FileWriter writer = new FileWriter(file, true);
         //BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.append(n.toString() + "\n");
-        b.adicionarUsuario(n);
+        b.adicionar(n);
         writer.flush();
         writer.close();
     }

@@ -5,8 +5,8 @@
  */
 package br.ufrn.imd.telas;
 
-import br.ufrn.imd.controle.BancoMusicas;
-import br.ufrn.imd.controle.BancoPlaylist;
+import br.ufrn.imd.daos.MusicasDao;
+import br.ufrn.imd.daos.PlaylistsDao;
 import br.ufrn.imd.musica.Musica;
 import br.ufrn.imd.musica.Playlist;
 import br.ufrn.imd.musica.Tocador;
@@ -24,24 +24,26 @@ import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
+ * Classe que implementa a interface da tela principal.
  *
- * @author pedroarthur-mf
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class Principal extends javax.swing.JFrame {
 
-    private Usuario usuario;
-    private String caminho;
-    private Thread thMusica;
-    private Thread thPlaylist;
+    private Usuario usuario; //Usuario atual.
+    private String caminho; 
+    private Thread thMusica;// thread que toca uma música.
+    private Thread thPlaylist; // thread que toca uma playlist
     private int estado; //0-parado, 1-pausado, 2-tocando
     private DefaultListModel listModel;
     private DefaultListModel listModelpl;
     private DefaultListModel listModelMusicaspl;
-    private static BancoMusicas bm;
-    private static BancoPlaylist bpl;
+    private static MusicasDao bm; // Banco de músicas.
+    private static PlaylistsDao bpl; // Bando de playlists.
 
     /**
-     * Creates new form Principal
+     * Cria um novo form Principal
      *
      * @throws java.io.IOException
      */
@@ -55,7 +57,6 @@ public class Principal extends javax.swing.JFrame {
         btnPlay.setEnabled(false);
         btnProx.setEnabled(false);
         BtnAnt.setEnabled(false);
-//        if (!usuario.ePremium()) btnGerenciar.setVisible(false);
 
         lblNomeUsuario.setText("Usuário: " + this.usuario.getNome());
 
@@ -71,13 +72,13 @@ public class Principal extends javax.swing.JFrame {
         ListaMusPlaylist.setModel(listModelMusicaspl);
         ListaMusPlaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        bm = BancoMusicas.getInstance();
+        bm = MusicasDao.getInstance();
 
         lerMusicas();
 
         if (usuario.ePremium()) {
             lblPremium.setText("Usuário Premium");
-            bpl = BancoPlaylist.getInstance();
+            bpl = PlaylistsDao.getInstance();
             listModelpl.clear();
             bpl.carregarPlaylist(usuario);
             lerPlaylists();
@@ -263,12 +264,12 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(playlist, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(58, 58, 58)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnSair))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -338,7 +339,10 @@ public class Principal extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Toca uma música ou as músicas de uma playlist selecionada. 
+ * @param evt 
+ */
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
         if (estado == 1) {
             if (thMusica != null && thMusica.isAlive()) {
@@ -350,6 +354,10 @@ public class Principal extends javax.swing.JFrame {
                 BtnAnt.setEnabled(true);
             }
         } else if (estado == 0) {
+            if (thPlaylist != null) {
+                thPlaylist.stop();
+                thPlaylist = null;
+            }
             Tocador p1;
             if (!ListaPlaylist.isSelectionEmpty()) {
                 this.thPlaylist = new Thread(
@@ -396,25 +404,28 @@ public class Principal extends javax.swing.JFrame {
             btnProx.setEnabled(false);
             BtnAnt.setEnabled(false);
         }
-//        new Thread(
-//                new Runnable() {
-//            public void run() {
-//                while (true) {
-//                    if ((!thMusica.isAlive() && !thPlaylist.isAlive()) && estado != 0) {
-//                        estado = 0;
-//                        btnParar.setEnabled(false);
-//                        btnPausar.setEnabled(false);
-//                        break;
-//                    }
-//                    else if(!thMusica.isAlive() && !thPlaylist.isAlive()){
-//                        break;
-//                    }
-//                }
-//            }
-//
-//        }).start();
-    }//GEN-LAST:event_btnPlayActionPerformed
+        new Thread(
+                new Runnable() {
+            public void run() {
+                while (true) {
+                    if (thMusica != null && !thMusica.isAlive() && thPlaylist == null && estado != 0) {
+                        estado = 0;
+                        btnParar.setEnabled(false);
+                        btnPausar.setEnabled(false);
+                        btnPlay.setEnabled(true);
+                        break;
+                    } else if (thMusica != null && !thMusica.isAlive() && estado == 0) {
+                        break;
+                    }
+                }
+            }
 
+        }).start();
+    }//GEN-LAST:event_btnPlayActionPerformed
+    /**
+     * Faz com que a música que está sendo executada pare.
+     * @param evt 
+     */
     private void btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPararActionPerformed
         if (estado != 0) {
             if (thMusica != null && thMusica.isAlive()) {
@@ -434,7 +445,11 @@ public class Principal extends javax.swing.JFrame {
             btnPausar.setEnabled(false);
         }
     }//GEN-LAST:event_btnPararActionPerformed
-
+    /**
+     * Faz com que a música que está tocando no momento seja pausada.
+     *
+     * @param evt
+     */
     private void btnPausarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPausarActionPerformed
         if (this.estado != 1) {
             if (thMusica != null && thMusica.isAlive()) {
@@ -454,7 +469,12 @@ public class Principal extends javax.swing.JFrame {
             btnPausar.setEnabled(false);
         }
     }//GEN-LAST:event_btnPausarActionPerformed
-
+    /**
+     * Abre um JFaleChooser para seleciomar um arqruivo ou um diretorio contendo
+     * arquivos do tipo ".mp3".
+     *
+     * @param evt
+     */
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquvos MP3", "mp3");
         JFileChooser arquivo = new JFileChooser();
@@ -468,21 +488,9 @@ public class Principal extends javax.swing.JFrame {
                 Musica m = new Musica(arquivo.getSelectedFile().getAbsolutePath());
                 if (!isOnList(m)) {
                     listModel.addElement(m);
-                    try {
-                        bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
-
-                    } catch (IOException ex) {
-                        Logger.getLogger(Principal.class
-                                .getName()).log(Level.SEVERE, null, ex);
-                    }
+                    bm.adicionar(arquivo.getSelectedFile().getAbsolutePath());
                 }
-                try {
-                    bm.addMusicas(arquivo.getSelectedFile().getAbsolutePath());
-
-                } catch (IOException ex) {
-                    Logger.getLogger(Principal.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                }
+                bm.adicionar(arquivo.getSelectedFile().getAbsolutePath());
             } else {    //DIRETORIO
                 // Filtrar arquivos .mp3 de dentro do diretório.
                 File[] arquivosDir = arquivo.getSelectedFile().listFiles();
@@ -496,7 +504,7 @@ public class Principal extends javax.swing.JFrame {
                     }
                 }
                 try {
-                    bm.addDiretotio(arquivo.getSelectedFile().getAbsolutePath());
+                    bm.adicionarDiretorio(arquivo.getSelectedFile().getAbsolutePath());
 
                 } catch (IOException ex) {
                     Logger.getLogger(Principal.class
@@ -506,7 +514,11 @@ public class Principal extends javax.swing.JFrame {
             ListaMusicas.setModel(listModel);
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
-
+    /**
+     * Limpa JList de músicas da Playlist e ativa o botão de play.
+     *
+     * @param evt
+     */
     private void ListaMusicasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaMusicasMouseClicked
         ListaPlaylist.clearSelection();
         listModelMusicaspl.clear();
@@ -519,7 +531,11 @@ public class Principal extends javax.swing.JFrame {
             btnPlay.setEnabled(true);
         }
     }//GEN-LAST:event_ListaMusicasMouseClicked
-
+    /**
+     * Apaga as musicas previamente carregar no sistema.
+     *
+     * @param evt
+     */
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         FileWriter writer;
         try {
@@ -545,10 +561,10 @@ public class Principal extends javax.swing.JFrame {
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
-        BancoMusicas b;
+        MusicasDao b;
         try {
-            b = BancoMusicas.getInstance();
-            b.removerMusicas();
+            b = MusicasDao.getInstance();
+            b.removerTudo();
 
         } catch (IOException ex) {
             Logger.getLogger(Principal.class
@@ -560,7 +576,11 @@ public class Principal extends javax.swing.JFrame {
 
         // Atualizar visualização na tela.
     }//GEN-LAST:event_btnLimparActionPerformed
-
+    /**
+     * Faz com que o usuário saia da sessão.
+     *
+     * @param evt
+     */
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         this.setVisible(false);
         Login l;
@@ -581,7 +601,11 @@ public class Principal extends javax.swing.JFrame {
             thPlaylist.stop();
         }
     }//GEN-LAST:event_btnSairActionPerformed
-
+    /**
+     * Abre uma nova janela para para o gerenciamento de palylists.
+     *
+     * @param evt
+     */
     private void btnGerenciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerenciarActionPerformed
         AdmPlaylist p;
         try {
@@ -599,29 +623,41 @@ public class Principal extends javax.swing.JFrame {
         this.disable();
         this.setVisible(false);
     }//GEN-LAST:event_btnGerenciarActionPerformed
-
+    /**
+     * Faz com que quando uma Playlist é selecionada, as musicas dela apareçam
+     * na Jlist correspondes as músicas de uma Playlost.
+     *
+     * @param evt
+     */
     private void ListaPlaylistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaPlaylistMouseClicked
         ListaMusicas.clearSelection();
 
         int index = ListaPlaylist.getSelectedIndex();
-        Playlist playlist = (Playlist) listModelpl.getElementAt(index);
-        listModelMusicaspl.clear();
-        for (Musica m : playlist.getMusicas()) {
-            listModelMusicaspl.addElement(m);
-        }
-        ListaMusPlaylist.setModel(listModelMusicaspl);
-        ListaMusPlaylist.setSelectedIndex(0);
-        if (estado == 0) {
-            btnPlay.setEnabled(true);
+        if (index != -1) {
+            Playlist playlist = (Playlist) listModelpl.getElementAt(index);
+            listModelMusicaspl.clear();
+            for (Musica m : playlist.getMusicas()) {
+                listModelMusicaspl.addElement(m);
+            }
+            ListaMusPlaylist.setModel(listModelMusicaspl);
+            ListaMusPlaylist.setSelectedIndex(0);
+            if (estado == 0) {
+                btnPlay.setEnabled(true);
+            }
         }
     }//GEN-LAST:event_ListaPlaylistMouseClicked
-
+    /**
+     * Faz com que a próxima música da playlist seja tocada.
+     *
+     * @param evt
+     */
     private void btnProxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProxActionPerformed
         int index = ListaMusPlaylist.getSelectedIndex();
-        ListaMusPlaylist.setSelectedIndex(++index);
+        int a = listModelMusicaspl.getSize();
+        ListaMusPlaylist.setSelectedIndex((++index) % a);
 
-        thPlaylist.stop();
         thMusica.stop();
+        thPlaylist.stop();
         this.estado = 0;
 
         btnPlay.setEnabled(false);
@@ -632,7 +668,11 @@ public class Principal extends javax.swing.JFrame {
 
         btnPlayActionPerformed(evt);
     }//GEN-LAST:event_btnProxActionPerformed
-
+    /**
+     * Faz com que a música anterior da Playlist seja tocada.
+     *
+     * @param evt
+     */
     private void BtnAntActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAntActionPerformed
         int index = ListaMusPlaylist.getSelectedIndex();
         ListaMusPlaylist.setSelectedIndex(--index);
@@ -732,12 +772,17 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel lblPremium;
     private javax.swing.JLabel playlist;
     // End of variables declaration//GEN-END:variables
-
+/**
+     * Lê as músicas e diretorios presentes nos arquivos ".txt" e as carrega no
+     * programa.
+     *
+     * @throws IOException
+     */
     private void lerMusicas() throws IOException {
         ArrayList<String> m = bm.getListMusicas();
         for (String nome : m) {
             Musica mus = new Musica(nome);
-            if (!listModel.contains(mus)) {
+            if (!jaExiste(mus)) {
                 listModel.addElement(mus);
             }
         }
@@ -750,7 +795,7 @@ public class Principal extends javax.swing.JFrame {
                 for (File musicaArq : arquivosDir) {
                     if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
                         Musica mus = new Musica(musicaArq.getAbsolutePath());
-                        if (!listModel.contains(mus)) {
+                        if (!jaExiste(mus)) {
                             listModel.addElement(mus);
                         }
                     }
@@ -760,6 +805,9 @@ public class Principal extends javax.swing.JFrame {
         ListaMusicas.setModel(listModel);
     }
 
+    /**
+     * Lê as Playlists presentes nos arquivos ".txt" e as carrega no programa.
+     */
     private void lerPlaylists() {
         ArrayList<Playlist> playlists = bpl.getPlaylists();
         for (Playlist p : playlists) {
@@ -768,5 +816,20 @@ public class Principal extends javax.swing.JFrame {
             }
         }
         ListaPlaylist.setModel(listModelpl);
+    }
+
+    /**
+     * Verifica se uma música já está presente no Modelo da JList de musicas.
+     *
+     * @param mus musica que deseja ser verificada.
+     * @return true se a musica já estiver o modelo ou false se não estiver.
+     */
+    public boolean jaExiste(Musica mus) {
+        for (int i = 0; i < listModel.size(); i++) {
+            if (mus.getNome().equals(((Musica) listModel.getElementAt(i)).getNome())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
