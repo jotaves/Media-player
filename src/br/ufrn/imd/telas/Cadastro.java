@@ -16,9 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author jotave
+ * Classe que implementa a interface da tela de cadastro.
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
+
 public class Cadastro extends javax.swing.JFrame {
 
     private File file;
@@ -54,6 +57,7 @@ public class Cadastro extends javax.swing.JFrame {
         txtSenhaConf = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cadastro");
 
         jLabel1.setText("Usuário:");
 

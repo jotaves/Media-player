@@ -24,8 +24,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
+ * Classe que implementa a interface da tela principal.
  *
- * @author pedroarthur-mf
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class Principal extends javax.swing.JFrame {
 
@@ -263,12 +265,12 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(playlist, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(58, 58, 58)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnSair))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -350,6 +352,10 @@ public class Principal extends javax.swing.JFrame {
                 BtnAnt.setEnabled(true);
             }
         } else if (estado == 0) {
+            if(thPlaylist != null){
+                thPlaylist.stop();
+                thPlaylist = null;
+            }
             Tocador p1;
             if (!ListaPlaylist.isSelectionEmpty()) {
                 this.thPlaylist = new Thread(
@@ -396,23 +402,25 @@ public class Principal extends javax.swing.JFrame {
             btnProx.setEnabled(false);
             BtnAnt.setEnabled(false);
         }
-//        new Thread(
-//                new Runnable() {
-//            public void run() {
-//                while (true) {
-//                    if ((!thMusica.isAlive() && !thPlaylist.isAlive()) && estado != 0) {
-//                        estado = 0;
-//                        btnParar.setEnabled(false);
-//                        btnPausar.setEnabled(false);
-//                        break;
-//                    }
-//                    else if(!thMusica.isAlive() && !thPlaylist.isAlive()){
-//                        break;
-//                    }
-//                }
-//            }
-//
-//        }).start();
+        new Thread(
+                new Runnable() {
+            public void run() {
+                while (true) {
+                    if (thMusica != null && !thMusica.isAlive() && thPlaylist == null && estado != 0) {
+                        estado = 0;
+                        btnParar.setEnabled(false);
+                        btnPausar.setEnabled(false);
+                        btnPlay.setEnabled(true);
+                        break;
+                    }
+
+                    else if (thMusica != null && !thMusica.isAlive() && estado == 0) {
+                        break;
+                    }
+                }
+            }
+
+        }).start();
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPararActionPerformed
@@ -609,8 +617,8 @@ public class Principal extends javax.swing.JFrame {
     private void btnProxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProxActionPerformed
         int index = ListaMusPlaylist.getSelectedIndex();
         int a = listModelMusicaspl.getSize();
-        ListaMusPlaylist.setSelectedIndex((++index)%a);
-        
+        ListaMusPlaylist.setSelectedIndex((++index) % a);
+
         thMusica.stop();
         thPlaylist.stop();
         this.estado = 0;
@@ -760,7 +768,7 @@ public class Principal extends javax.swing.JFrame {
         }
         ListaPlaylist.setModel(listModelpl);
     }
-    
+
     public boolean jaExiste(Musica mus) {
         for (int i = 0; i < listModel.size(); i++) {
             if (mus.getNome().equals(((Musica) listModel.getElementAt(i)).getNome())) {
@@ -768,5 +776,5 @@ public class Principal extends javax.swing.JFrame {
             }
         }
         return false;
-    }    
+    }
 }

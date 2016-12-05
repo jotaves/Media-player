@@ -20,8 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author jotave
+ * Classe que implementa o banco de Playlists.
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class PlaylistsDao implements GenericDao{
 

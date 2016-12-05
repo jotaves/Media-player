@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- *
- * @author jotave
+ * Classe que implementa um nó de uma árvore Trie.
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class NodeTrie {
 

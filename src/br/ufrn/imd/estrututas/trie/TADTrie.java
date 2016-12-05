@@ -9,8 +9,10 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- *
- * @author jotave
+ * Classe que implementa uma árvore Trie.
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class TADTrie {
 

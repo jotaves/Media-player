@@ -12,8 +12,10 @@ import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;
 
 /**
- *
- * @author jotave
+ * Classe que implementa O banco de Usuarios.
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class UsuarioDao implements GenericDao {
 

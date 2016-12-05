@@ -6,8 +6,10 @@
 package br.ufrn.imd.interfaces;
 
 /**
- *
- * @author jotave
+ * Classe que implementa uma árvore Trie.
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public interface GenericDao {
     public boolean adicionar(Object o);

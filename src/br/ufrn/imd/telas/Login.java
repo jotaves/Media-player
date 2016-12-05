@@ -5,7 +5,6 @@
  */
 package br.ufrn.imd.telas;
 
-import br.ufrn.imd.daos.MusicasDao;
 import br.ufrn.imd.daos.UsuarioDao;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;
@@ -16,10 +15,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
- *
- * @author jotave
+ * Classe que implementa a interface da tela de Login.
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class Login extends javax.swing.JFrame {
 
@@ -56,6 +56,7 @@ public class Login extends javax.swing.JFrame {
         lblErro = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login");
         setResizable(false);
 
         btnLogin.setText("Login");

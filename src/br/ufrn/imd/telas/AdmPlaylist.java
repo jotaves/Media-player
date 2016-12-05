@@ -20,8 +20,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
 
 /**
+ * Classe que implementa a interface de gerenciamento de Playlists.
  *
- * @author pedroarthur-mf
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class AdmPlaylist extends javax.swing.JFrame {
 
@@ -57,6 +59,10 @@ public class AdmPlaylist extends javax.swing.JFrame {
         bpl = PlaylistsDao.getInstance();
         bpl.carregarPlaylist(usuario);
         lerPlaylists();
+
+        btnAdicionarMs.setEnabled(false);
+        btnExcluirMus.setEnabled(false);
+        btnApagarPl.setEnabled(false);
     }
 
     /**
@@ -82,10 +88,11 @@ public class AdmPlaylist extends javax.swing.JFrame {
         playlist = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        btnExcluirMus = new javax.swing.JToggleButton();
         btnApagarPl = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gerenciar Playlists");
         setResizable(false);
 
         btnAdicionarMs.setText("Adicionar ->");
@@ -144,14 +151,19 @@ public class AdmPlaylist extends javax.swing.JFrame {
 
         jLabel3.setText("Adicione nova play list");
 
-        jToggleButton1.setText("Excluir");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnExcluirMus.setText("Excluir");
+        btnExcluirMus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
+                btnExcluirMusActionPerformed(evt);
             }
         });
 
         btnApagarPl.setText("Apagar Playlist");
+        btnApagarPl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnApagarPlMouseClicked(evt);
+            }
+        });
         btnApagarPl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnApagarPlActionPerformed(evt);
@@ -198,7 +210,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel1))
-                            .addComponent(jToggleButton1, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(btnExcluirMus, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -219,7 +231,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
                     .addComponent(jScrollPane3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
+                    .addComponent(btnExcluirMus)
                     .addComponent(btnApagarPl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jLabel3)
@@ -237,12 +249,9 @@ public class AdmPlaylist extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ListaMusicasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaMusicasMouseClicked
-//        int index = ListaMusicas.getSelectedIndex();
-//        Musica musica = (Musica) listModel.getElementAt(index);
-//        this.caminho = musica.getCaminho();
-//        if (estado == 0) {
-//            btnPlay.setEnabled(true);
-//        }
+        if (!ListaPlaylist.isSelectionEmpty()) {
+            btnAdicionarMs.setEnabled(true);
+        }
     }//GEN-LAST:event_ListaMusicasMouseClicked
 
     private void btnAdicionarMsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarMsActionPerformed
@@ -296,6 +305,10 @@ public class AdmPlaylist extends javax.swing.JFrame {
     }//GEN-LAST:event_btnOKActionPerformed
 
     private void ListaPlaylistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaPlaylistMouseClicked
+        btnApagarPl.setEnabled(true);
+        if (!ListaMusicas.isSelectionEmpty()) {
+            btnAdicionarMs.setEnabled(true);
+        }
         int index = ListaPlaylist.getSelectedIndex();
         if (index != -1) {
             Playlist playlist = (Playlist) listModelpl.getElementAt(index);
@@ -315,9 +328,11 @@ public class AdmPlaylist extends javax.swing.JFrame {
             bpl.remover(playlist);
             listModelpl.remove(index);
         }
+        listModelMusicaspl.clear();
+        ListaMusPlaylist.setModel(listModelMusicaspl);
     }//GEN-LAST:event_btnApagarPlActionPerformed
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+    private void btnExcluirMusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirMusActionPerformed
         int indexPL = ListaPlaylist.getSelectedIndex();
         int indexMu = ListaMusPlaylist.getSelectedIndex();
         if (indexPL != -1 && indexMu != -1) {
@@ -325,18 +340,21 @@ public class AdmPlaylist extends javax.swing.JFrame {
             Musica m = (Musica) listModelMusicaspl.getElementAt(indexMu);
             listModelMusicaspl.remove(indexMu);
             try {
-//                System.out.println("Deletar: " + m.getCaminho());
                 playlist.removerMusica(m);
             } catch (IOException ex) {
                 Logger.getLogger(AdmPlaylist.class.getName()).log(Level.SEVERE, null, ex);
             }
             ListaMusPlaylist.setModel(listModelMusicaspl);
         }
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+    }//GEN-LAST:event_btnExcluirMusActionPerformed
 
     private void ListaMusPlaylistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaMusPlaylistMouseClicked
-        // TODO add your handling code here:
+        btnExcluirMus.setEnabled(true);
     }//GEN-LAST:event_ListaMusPlaylistMouseClicked
+
+    private void btnApagarPlMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnApagarPlMouseClicked
+
+    }//GEN-LAST:event_btnApagarPlMouseClicked
 
     /**
      * @param args the command line arguments
@@ -384,6 +402,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
     private javax.swing.JButton btnAdicionarMs;
     private javax.swing.JButton btnAdicionarPL;
     private javax.swing.JButton btnApagarPl;
+    private javax.swing.JToggleButton btnExcluirMus;
     private javax.swing.JButton btnOK;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -391,7 +410,6 @@ public class AdmPlaylist extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel playlist;
     private javax.swing.JTextField txtNovaPlaylist;
     // End of variables declaration//GEN-END:variables

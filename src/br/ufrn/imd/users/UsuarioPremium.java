@@ -9,8 +9,10 @@ import br.ufrn.imd.musica.Playlist;
 import java.util.ArrayList;
 
 /**
- *
- * @author pedroarthur-mf
+ * Classe .
+ * 
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class UsuarioPremium extends Usuario {
 
