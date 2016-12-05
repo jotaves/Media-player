@@ -5,8 +5,8 @@
  */
 package br.ufrn.imd.daos;
 
-import br.imd.Arvore.NodeArvore;
-import br.imd.Arvore.TADArvore;
+import br.ufrn.imd.estrututas.abb.NodeArvore;
+import br.ufrn.imd.estrututas.abb.TADArvore;
 import br.ufrn.imd.interfaces.GenericDao;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;

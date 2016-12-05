@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.imd.estrututas;
+package br.ufrn.imd.estrututas.trie;
 
+import br.ufrn.imd.estrututas.trie.TADTrie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

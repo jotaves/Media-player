@@ -265,7 +265,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
 
     private void btnAdicionarPLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarPLActionPerformed
         Playlist p;
-        
+
         if (!txtNovaPlaylist.getText().equals("")) {
             try {
                 p = new Playlist(txtNovaPlaylist.getText(), (UsuarioPremium) this.usuario);
@@ -404,7 +404,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
             for (File musicaArq : arquivosDir) {
                 if (musicaArq.getAbsolutePath().endsWith(".mp3")) {
                     Musica mus = new Musica(musicaArq.getAbsolutePath());
-                    if (!listModel.contains(mus)) {
+                    if (!jaExiste(mus)) {
                         listModel.addElement(new Musica(musicaArq.getAbsolutePath()));
                     }
                 }
@@ -413,7 +413,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
         ArrayList<String> m = bm.getListMusicas();
         for (String nome : m) {
             Musica mus = new Musica(nome);
-            if (!listModel.contains(mus)) {
+            if (!jaExiste(mus)) {
                 listModel.addElement(new Musica(nome));
             }
         }
@@ -429,4 +429,12 @@ public class AdmPlaylist extends javax.swing.JFrame {
         ListaPlaylist.setModel(listModelpl);
     }
 
+    public boolean jaExiste(Musica mus) {
+        for (int i = 0; i < listModel.size(); i++) {
+            if (mus.getNome().equals(((Musica) listModel.getElementAt(i)).getNome())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,4 +1,4 @@
-package br.imd.Arvore;
+package br.ufrn.imd.estrututas.abb;
 
 import java.util.LinkedList;
 import java.util.Queue;

@@ -1,4 +1,4 @@
-package br.ufrn.imd.estrututas;
+package br.ufrn.imd.estrututas.trie;
 
 import java.util.ArrayList;
 import java.util.Collection;
