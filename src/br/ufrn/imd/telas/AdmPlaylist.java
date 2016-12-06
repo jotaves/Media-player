@@ -281,7 +281,8 @@ public class AdmPlaylist extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAdicionarMsActionPerformed
     /**
-     *Cria uma nova playlist com o nome digitado.
+     * Cria uma nova playlist com o nome digitado.
+     *
      * @param evt
      */
     private void btnAdicionarPLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarPLActionPerformed
@@ -305,7 +306,8 @@ public class AdmPlaylist extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNovaPlaylistActionPerformed
     /**
-     *Sai da tela de gerenciamento e volta para tela principal.
+     * Sai da tela de gerenciamento e volta para tela principal.
+     *
      * @param evt
      */
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
@@ -319,6 +321,8 @@ public class AdmPlaylist extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnOKActionPerformed
     /**
+     * Faz com que as músicas de uma playlist aparessam na JList quando uma play
+     * list for selecionada.
      *
      * @param evt
      */
@@ -339,6 +343,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ListaPlaylistMouseClicked
     /**
+     * Apaga a playlist selecionada.
      *
      * @param evt
      */
@@ -353,6 +358,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
         ListaMusPlaylist.setModel(listModelMusicaspl);
     }//GEN-LAST:event_btnApagarPlActionPerformed
     /**
+     * Apaga a musica selecionada da playlist.
      *
      * @param evt
      */
@@ -372,6 +378,8 @@ public class AdmPlaylist extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnExcluirMusActionPerformed
     /**
+     * Torna ecesível o botão de excluir musica quando uma musica da playlist é
+     * selecionada.
      *
      * @param evt
      */
@@ -440,7 +448,9 @@ public class AdmPlaylist extends javax.swing.JFrame {
     private javax.swing.JLabel playlist;
     private javax.swing.JTextField txtNovaPlaylist;
     // End of variables declaration//GEN-END:variables
-/**
+
+    /**
+     * Lê as músicas que devem ser carregadas a partir de um arquivo ".txt".
      *
      * @throws IOException
      */
@@ -470,7 +480,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
     }
 
     /**
-     *
+     * Ler as playlists que devem ser carregadas a partir de arquivos ".txt"
      */
     private void lerPlaylists() {
         ArrayList<Playlist> playlists = bpl.getPlaylists();
@@ -481,9 +491,11 @@ public class AdmPlaylist extends javax.swing.JFrame {
     }
 
     /**
+     * Verifica a existencia de uma Música no modelo do JList em que ela
+     * aparece.
      *
-     * @param mus
-     * @return
+     * @param mus Música que se deseja verificar.
+     * @return true se ja existe ou false caso contrario.
      */
     public boolean jaExiste(Musica mus) {
         for (int i = 0; i < listModel.size(); i++) {

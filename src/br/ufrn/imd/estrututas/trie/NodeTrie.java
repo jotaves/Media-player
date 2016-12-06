@@ -29,6 +29,7 @@ public class NodeTrie {
 
     /**
      * Construtor da classe
+     *
      * @param valor O valor que será adicionado
      */
     public NodeTrie(Character valor) {
@@ -38,6 +39,7 @@ public class NodeTrie {
 
     /**
      * Método que retorna o valor do nó
+     *
      * @return Valor do nó
      */
     public Character getValor() {
@@ -46,6 +48,7 @@ public class NodeTrie {
 
     /**
      * Método que seta o valor do nó
+     *
      * @param valor Valor do nó
      */
     public void setValor(Character valor) {
@@ -54,6 +57,7 @@ public class NodeTrie {
 
     /**
      * Método que retorna os filhos do nó
+     *
      * @return HashMap com os filhos do nó e suas chaves
      */
     public HashMap<Character, NodeTrie> getFilhos() {
@@ -62,6 +66,7 @@ public class NodeTrie {
 
     /**
      * Método que seta os filhos do nó
+     *
      * @param filhos HashMap com os filhos do nó e suas chaves
      */
     public void setFilhos(HashMap<Character, NodeTrie> filhos) {
@@ -70,6 +75,7 @@ public class NodeTrie {
 
     /**
      * Método que retorna se o nó é folha
+     *
      * @return Booleano que indica se o nó é folha
      */
     public boolean isFolha() {
@@ -78,6 +84,7 @@ public class NodeTrie {
 
     /**
      * Método que seta se um nó é folha
+     *
      * @param folha Booleano que indica se o nó é folha
      */
     public void setFolha(boolean folha) {
