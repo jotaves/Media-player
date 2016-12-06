@@ -20,7 +20,7 @@ public class NodeTrie {
     private boolean folha;
 
     /**
-     *
+     * Construtor da classe
      */
     public NodeTrie() {
         this.valor = null;
@@ -28,8 +28,8 @@ public class NodeTrie {
     }
 
     /**
-     *
-     * @param valor
+     * Construtor da classe
+     * @param valor O valor que será adicionado
      */
     public NodeTrie(Character valor) {
         this.valor = valor;
@@ -37,88 +37,50 @@ public class NodeTrie {
     }
 
     /**
-     *
-     * @return
+     * Método que retorna o valor do nó
+     * @return Valor do nó
      */
     public Character getValor() {
         return valor;
     }
 
     /**
-     *
-     * @param valor
+     * Método que seta o valor do nó
+     * @param valor Valor do nó
      */
     public void setValor(Character valor) {
         this.valor = valor;
     }
 
     /**
-     *
-     * @return
+     * Método que retorna os filhos do nó
+     * @return HashMap com os filhos do nó e suas chaves
      */
     public HashMap<Character, NodeTrie> getFilhos() {
         return filhos;
     }
 
     /**
-     *
-     * @param filhos
+     * Método que seta os filhos do nó
+     * @param filhos HashMap com os filhos do nó e suas chaves
      */
     public void setFilhos(HashMap<Character, NodeTrie> filhos) {
         this.filhos = filhos;
     }
 
     /**
-     *
-     * @return
+     * Método que retorna se o nó é folha
+     * @return Booleano que indica se o nó é folha
      */
     public boolean isFolha() {
         return folha;
     }
 
     /**
-     *
-     * @param folha
+     * Método que seta se um nó é folha
+     * @param folha Booleano que indica se o nó é folha
      */
     public void setFolha(boolean folha) {
         this.folha = folha;
-    }
-
-    public Collection<String> autoComplete(String prefix) {
-        NodeTrie node = this;
-        for (char c : prefix.toCharArray()) {
-            if (!node.filhos.containsKey(c)) {
-                return Collections.emptyList();
-            }
-            node = node.filhos.get(c);
-        }
-        return node.allPrefixes();
-    }
-
-    /**
-     *
-     * @return
-     */
-    protected Collection<String> allPrefixes() {
-        List<String> results = new ArrayList<>();
-
-        if (this.folha) {
-            results.add("" + this.valor);
-            results.add(".");
-        } else {
-            results.add("" + this.valor);
-        }
-
-        if (this.filhos.size() > 1) {
-            results.add("/");
-        }
-
-        for (Entry<Character, NodeTrie> entry : filhos.entrySet()) {
-            NodeTrie child = entry.getValue();
-            Collection<String> childPrefixes = child.allPrefixes();
-            results.addAll(childPrefixes);
-        }
-        return results;
-
     }
 }

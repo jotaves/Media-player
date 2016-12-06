@@ -27,7 +27,7 @@ public class Cadastro extends javax.swing.JFrame {
     private UsuarioDao b;
 
     /**
-     * cria novo form Cadastro e carrega os arquivos necessarios.
+     * cria novo form Cadastro e carrega os arquivos necessários.
      */
     public Cadastro() {
         this.file = new File("bancos/usuarios.txt");

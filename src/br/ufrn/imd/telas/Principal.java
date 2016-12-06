@@ -617,8 +617,6 @@ public class Principal extends javax.swing.JFrame {
         try {
             l = new Login();
             l.setVisible(true);
-            //BancoMusicas b = BancoMusicas.getInstance();
-            //b.removerMusicas();
 
         } catch (IOException ex) {
             Logger.getLogger(Principal.class
