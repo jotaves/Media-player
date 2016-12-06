@@ -90,12 +90,12 @@ public class Principal extends javax.swing.JFrame {
             lblPremium.setText("");
             btnGerenciar.setEnabled(false);
         }
-        
+
         listModelBusca = new DefaultListModel();
         t = new TadTrie();
-        for(int i = 0; i < listModel.size(); i++) {
+        for (int i = 0; i < listModel.size(); i++) {
             t.inserir(((Musica) listModel.getElementAt(i)).getNome().toLowerCase());
-        }        
+        }
     }
 
     /**
@@ -723,17 +723,20 @@ public class Principal extends javax.swing.JFrame {
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarActionPerformed
-
+    /**
+     * Busca Musica que começam com o que foi digitado.
+     *
+     * @param evt
+     */
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
         String palavra = txtBuscar.getText();
-            listModelBusca.clear();
-            for(int i = 0; i < listModel.size(); i++) {
-                if (((Musica) listModel.getElementAt(i)).getNome().toLowerCase().startsWith(palavra.toLowerCase())) {
-                    //System.out.println(((Musica) listModel.getElementAt(i)).getNome());
-                    listModelBusca.addElement(listModel.getElementAt(i));
-                }
+        listModelBusca.clear();
+        for (int i = 0; i < listModel.size(); i++) {
+            if (((Musica) listModel.getElementAt(i)).getNome().toLowerCase().startsWith(palavra.toLowerCase())) {
+                listModelBusca.addElement(listModel.getElementAt(i));
             }
-            ListaMusicas.setModel(listModelBusca);
+        }
+        ListaMusicas.setModel(listModelBusca);
     }//GEN-LAST:event_txtBuscarKeyReleased
 
     /**
@@ -785,6 +788,12 @@ public class Principal extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Verifica se uma música está presente no modelo da Jlist que as mostra.
+     *
+     * @param m
+     * @return
+     */
     private boolean isOnList(Musica m) {
         for (int i = 0; i < listModel.getSize(); i++) {
             if (m.getNome().equals(((Musica) listModel.getElementAt(i)).getNome()) && m.getCaminho().equals(((Musica) listModel.getElementAt(i)).getCaminho())) {

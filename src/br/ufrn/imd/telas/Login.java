@@ -30,7 +30,7 @@ public class Login extends javax.swing.JFrame {
     private String caminho;
 
     /**
-     * Cria novo form Login e carrega os arquivos neessarios.
+     * Cria novo form Login e carrega os arquivos necessários.
      *
      * @throws java.io.IOException
      */

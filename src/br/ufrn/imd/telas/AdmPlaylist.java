@@ -35,7 +35,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
     private DefaultListModel listModelMusicaspl;
 
     /**
-     * Creates new form AdmPlaylist
+     * Cria novo form AdmPlaylist e carrega as dados necessários.
      */
     public AdmPlaylist(Usuario usuario) throws IOException {
         initComponents();
@@ -247,7 +247,9 @@ public class AdmPlaylist extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-/**
+    /**
+     * Torna botão de adicionar música acessíveis quando uma playlist é
+     * selecionada.
      *
      * @param evt
      */
@@ -257,6 +259,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ListaMusicasMouseClicked
     /**
+     * Faz com que a música selecionada seja adicionada a playlist selecionada.
      *
      * @param evt
      */
@@ -278,7 +281,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAdicionarMsActionPerformed
     /**
-     *
+     *Cria uma nova playlist com o nome digitado.
      * @param evt
      */
     private void btnAdicionarPLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarPLActionPerformed
@@ -302,7 +305,7 @@ public class AdmPlaylist extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNovaPlaylistActionPerformed
     /**
-     *
+     *Sai da tela de gerenciamento e volta para tela principal.
      * @param evt
      */
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
