@@ -6,9 +6,10 @@
 package br.ufrn.imd.users;
 
 /**
+ * Classe que extende da classe Usuario e implementa um usuario comum.
  *
- * @author Pedro Arthur Medeiros Fernades
- * @author João Victor B. Barboza
+ * @author João Victor Bezerra Barboza
+ * @author Pedro Arthur Medeiros Fernandes
  */
 public class UsuarioComum extends Usuario {
 

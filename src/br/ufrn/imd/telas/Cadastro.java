@@ -27,7 +27,7 @@ public class Cadastro extends javax.swing.JFrame {
     private UsuarioDao b;
 
     /**
-     * Creates new form Cadastro
+     * cria novo form Cadastro e carrega os arquivos necessarios.
      */
     public Cadastro() {
         this.file = new File("bancos/usuarios.txt");
@@ -159,7 +159,11 @@ public class Cadastro extends javax.swing.JFrame {
     private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
-
+    /**
+     * Cancela o cadastro de nova conta.
+     *
+     * @param evt
+     */
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.setVisible(false);
         Login l;
@@ -170,7 +174,12 @@ public class Cadastro extends javax.swing.JFrame {
             Logger.getLogger(Cadastro.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnVoltarActionPerformed
-
+    /**
+     * Verifica a validade dos dados Inceridos e tenta criar novo Usuario. Se
+     * não conseguir, apresenta mensagem de erro.
+     *
+     * @param evt
+     */
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
         Usuario u;
         if (txtUsuario.getText().equals("")) {
@@ -259,10 +268,15 @@ public class Cadastro extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtSenhaConf;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
-
+/**
+     * Escreve no arquivo do tipo ".txt" que armazena os usuários, o novo
+     * usuário criado.
+     *
+     * @param n Usuario a ser escrito.
+     * @throws IOException
+     */
     private void inscreverUsuario(Usuario n) throws IOException {
         FileWriter writer = new FileWriter(file, true);
-        //BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.append(n.toString() + "\n");
         b.adicionar(n);
         writer.flush();

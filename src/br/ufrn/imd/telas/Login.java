@@ -30,7 +30,7 @@ public class Login extends javax.swing.JFrame {
     private String caminho;
 
     /**
-     * Creates new form Login
+     * Cria novo form Login e carrega os arquivos neessarios.
      *
      * @throws java.io.IOException
      */
@@ -146,7 +146,12 @@ public class Login extends javax.swing.JFrame {
     private void txtSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtSenhaActionPerformed
-
+    /**
+     * Verifica a validade do usuário a ser logado e se funcionar, abre a tela
+     * principal.
+     *
+     * @param evt
+     */
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         boolean ok = false;
         try {
@@ -174,7 +179,11 @@ public class Login extends javax.swing.JFrame {
 //            lblErro.setText("Usuário ou senha incorretos.");
 //        }
     }//GEN-LAST:event_btnLoginActionPerformed
-
+    /**
+     * Abre tela de cadastro de um novo usuário.
+     *
+     * @param evt
+     */
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
         Cadastro c = new Cadastro();
         c.setVisible(true);
@@ -233,7 +242,12 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
-
+/**
+     * Carrega os usuarios ja existentes a partir da leitura de um arquivo
+     * ".txt".
+     *
+     * @throws IOException
+     */
     private void carregarUsuarios() throws IOException {
         FileReader fileReader = new FileReader(file);
         BufferedReader reader = new BufferedReader(fileReader);

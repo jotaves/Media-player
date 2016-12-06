@@ -32,7 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Principal extends javax.swing.JFrame {
 
     private Usuario usuario; //Usuario atual.
-    private String caminho; 
+    private String caminho;
     private Thread thMusica;// thread que toca uma música.
     private Thread thPlaylist; // thread que toca uma playlist
     private int estado; //0-parado, 1-pausado, 2-tocando
@@ -43,7 +43,8 @@ public class Principal extends javax.swing.JFrame {
     private static PlaylistsDao bpl; // Bando de playlists.
 
     /**
-     * Cria um novo form Principal
+     * Cria um novo form Principal, inicializa suas variaveis, carrega os dados
+     * necessarios e define os estados dos botões.
      *
      * @throws java.io.IOException
      */
@@ -340,9 +341,10 @@ public class Principal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 /**
- * Toca uma música ou as músicas de uma playlist selecionada. 
- * @param evt 
- */
+     * Toca uma música ou as músicas de uma playlist selecionada.
+     *
+     * @param evt
+     */
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
         if (estado == 1) {
             if (thMusica != null && thMusica.isAlive()) {
@@ -424,7 +426,8 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPlayActionPerformed
     /**
      * Faz com que a música que está sendo executada pare.
-     * @param evt 
+     *
+     * @param evt
      */
     private void btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPararActionPerformed
         if (estado != 0) {

@@ -9,7 +9,7 @@ import br.ufrn.imd.musica.Playlist;
 import java.util.ArrayList;
 
 /**
- * Classe .
+ * Classe que extende da classe Usuario e implementa um Usuário premium.
  *
  * @author João Victor Bezerra Barboza
  * @author Pedro Arthur Medeiros Fernandes
