@@ -6,7 +6,7 @@
 package br.ufrn.imd.users.execoes;
 
 /**
- * Classe de tratamento de Exeção para classe tela de Login.
+ * Classe de tratamento de Exceção para classe tela de Login.
  *
  * @author João Victor Bezerra Barboza
  * @author Pedro Arthur Medeiros Fernandes

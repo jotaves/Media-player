@@ -8,3 +8,4 @@ nova
 /home/jotave/Música/AdelinoOCantor-Gambiarra.mp3
 /home/jotave/Música/AdelinoOCantor-Gambiarra.mp3
 >>>>>>> 1adaa0f33d53adcd13f6da1817216e7cd98c875b
+/home/jotave/Música/AdelinoOCantor-Gambiarra.mp3
