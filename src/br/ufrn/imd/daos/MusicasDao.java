@@ -35,7 +35,7 @@ public class MusicasDao implements GenericDao {
     }
 
     /**
-     *
+     * Construtor da classe
      * @return @throws IOException
      */
     public static synchronized MusicasDao getInstance() throws IOException {
@@ -52,7 +52,7 @@ public class MusicasDao implements GenericDao {
     }
 
     /**
-     *
+     * Ler diretórios e armazenar
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -67,16 +67,16 @@ public class MusicasDao implements GenericDao {
     }
 
     /**
-     *
-     * @return
+     * Retorna a lista de diretórios
+     * @return Lista de diretórios
      */
     public ArrayList getListDiretorio() {
         return listDiretorio;
     }
 
     /**
-     *
-     * @param caminho
+     * Adicionar diretório
+     * @param caminho String com endereço do diretório a ser adicionado
      * @throws IOException
      */
     public void adicionarDiretorio(String caminho) throws IOException {
@@ -90,7 +90,7 @@ public class MusicasDao implements GenericDao {
     }
 
     /**
-     *
+     * Carregar/ler músicas
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -109,17 +109,17 @@ public class MusicasDao implements GenericDao {
     }
 
     /**
-     *
-     * @return
+     * Retorna a lista de músicas
+     * @return Lista de músicass
      */
     public ArrayList getListMusicas() {
         return listMusicas;
     }
 
     /**
-     *
-     * @param o
-     * @return
+     * Adiciona uma música à lista de músicas
+     * @param o Música a ser inserida
+     * @return true, se foi inserida; false, se não
      */
     @Override
     public boolean adicionar(Object o) {
@@ -141,7 +141,7 @@ public class MusicasDao implements GenericDao {
     }
 
     /**
-     *
+     * Remove todos os elementos de todas listas
      */
     public void removerTudo() {
         listMusicas = new ArrayList<>();
@@ -149,13 +149,12 @@ public class MusicasDao implements GenericDao {
     }
 
     /**
-     *
+     * Remove um elemento da lista de música
      * @param o
      */
     @Override
     public void remover(Object o) {
         listMusicas.remove((String) o);
-        // Apagar do arquivo tbm.
     }
 
 }
