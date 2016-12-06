@@ -36,6 +36,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Construtor da classe
+     *
      * @return @throws IOException
      */
     public static synchronized MusicasDao getInstance() throws IOException {
@@ -53,6 +54,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Ler diretórios e armazenar
+     *
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -68,6 +70,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Retorna a lista de diretórios
+     *
      * @return Lista de diretórios
      */
     public ArrayList getListDiretorio() {
@@ -76,6 +79,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Adicionar diretório
+     *
      * @param caminho String com endereço do diretório a ser adicionado
      * @throws IOException
      */
@@ -91,6 +95,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Carregar/ler músicas
+     *
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -110,6 +115,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Retorna a lista de músicas
+     *
      * @return Lista de músicass
      */
     public ArrayList getListMusicas() {
@@ -118,6 +124,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Adiciona uma música à lista de músicas
+     *
      * @param o Música a ser inserida
      * @return true, se foi inserida; false, se não
      */
@@ -150,6 +157,7 @@ public class MusicasDao implements GenericDao {
 
     /**
      * Remove um elemento da lista de música
+     *
      * @param o
      */
     @Override

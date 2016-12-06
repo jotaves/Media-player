@@ -28,6 +28,7 @@ public class UsuarioDao implements GenericDao {
 
     /**
      * Construtor da classe
+     *
      * @return Instância da classe
      */
     public static synchronized UsuarioDao getInstance() {
@@ -40,6 +41,7 @@ public class UsuarioDao implements GenericDao {
 
     /**
      * Verificar usuário pelo nome na árvore binária de busca
+     *
      * @param nome Nome do usuário
      * @return true, se o nome existir na árvore; false, se não for
      */
@@ -50,15 +52,15 @@ public class UsuarioDao implements GenericDao {
 
     /**
      * Verificar usuário pelo nome e senha na árvore binária de busca
+     *
      * @param nome Nome do usuário
      * @param senha Senha do usuário
      * @return true, se o usuário existir na árvore; false, se não
-     * @throws br.ufrn.imd.users.execoes.UsuarioExeption
      */
-    public boolean verificarUsuarioESenha(String nome, String senha) throws LoginExeption{
+    public boolean verificarUsuarioESenha(String nome, String senha) throws LoginExeption {
         Usuario u = new UsuarioComum(nome, senha);
         NodeArvore<Usuario> n = usuarios.buscarArvore(u);
-        if(!(n != null && nome.equals(n.getConteudo().getNome()) && senha.equals(n.getConteudo().getSenha()))){
+        if (!(n != null && nome.equals(n.getConteudo().getNome()) && senha.equals(n.getConteudo().getSenha()))) {
             throw new LoginExeption("Usuário não exite!");
         }
         return true;
@@ -66,6 +68,7 @@ public class UsuarioDao implements GenericDao {
 
     /**
      * Verifica se um usuário é premium
+     *
      * @param nome Nome do usuário
      * @param senha Senha do usuário
      * @return true, se o usuário for premium; false, se não
@@ -78,6 +81,7 @@ public class UsuarioDao implements GenericDao {
 
     /**
      * Retorna a árvore com todos os usuários
+     *
      * @return
      */
     public TADArvore<Usuario> getUsuarios() {
@@ -86,6 +90,7 @@ public class UsuarioDao implements GenericDao {
 
     /**
      * Adicionar um usuário à lista
+     *
      * @param o Usuário a ser adicionado
      * @return true, se o usuário foi adicionado; false, se não
      */
@@ -96,6 +101,7 @@ public class UsuarioDao implements GenericDao {
 
     /**
      * Remover um usuário da lista
+     *
      * @param o Usuário a ser removido
      */
     @Override

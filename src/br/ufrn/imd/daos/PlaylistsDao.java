@@ -35,7 +35,8 @@ public class PlaylistsDao implements GenericDao {
     }
 
     /**
-     *Constrou nova PlaylistDao.
+     * Constrou nova PlaylistDao.
+     *
      * @return uniqueInstance
      */
     public static synchronized PlaylistsDao getInstance() {
@@ -47,7 +48,8 @@ public class PlaylistsDao implements GenericDao {
     }
 
     /**
-     *Adiciona nova Playlist ao banco.
+     * Adiciona nova Playlist ao banco.
+     *
      * @param o Playlist que se deseja adicionar.
      * @return true se ofr adicionada ou false caso contrario.
      */
@@ -68,7 +70,8 @@ public class PlaylistsDao implements GenericDao {
     }
 
     /**
-     *Remove uma Playlist do banco.
+     * Remove uma Playlist do banco.
+     *
      * @param o Playlist a ser removida.
      */
     @Override
@@ -81,6 +84,7 @@ public class PlaylistsDao implements GenericDao {
 
     /**
      * Cria um novo arquivo para uma nova Playlist.
+     *
      * @param pl Playlist que deve ser criada.
      * @throws IOException
      */
@@ -100,7 +104,8 @@ public class PlaylistsDao implements GenericDao {
     }
 
     /**
-     *Carrega as Playlists ja existentes.
+     * Carrega as Playlists ja existentes.
+     *
      * @param usuario Usuario ao quais as playlists pertencem
      * @throws IOException
      */
@@ -135,7 +140,8 @@ public class PlaylistsDao implements GenericDao {
     }
 
     /**
-     *Verifica o nome original do arquivo sem o caminho do diretorio.
+     * Verifica o nome original do arquivo sem o caminho do diretorio.
+     *
      * @param nome ncaminho inteiro do arquivo.
      * @return nome verdadeiro do arquivo.
      */
@@ -152,7 +158,8 @@ public class PlaylistsDao implements GenericDao {
     }
 
     /**
-     *Retorna o banco de playlists
+     * Retorna o banco de playlists
+     *
      * @return banco de playlists
      */
     public static ArrayList<Playlist> getPlaylists() {
@@ -160,9 +167,10 @@ public class PlaylistsDao implements GenericDao {
     }
 
     /**
-     *Verifica se a playlist ja existe no banco
-     * @param pl banco de playlist q se deseja verificar 
-     * @return  true se exitste ou false caso contrario.
+     * Verifica se a playlist ja existe no banco
+     *
+     * @param pl banco de playlist q se deseja verificar
+     * @return true se exitste ou false caso contrario.
      */
     public boolean jaExiste(Playlist pl) {
         for (Playlist p : playlists) {
