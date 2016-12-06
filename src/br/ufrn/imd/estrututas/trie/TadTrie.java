@@ -5,7 +5,6 @@
  */
 package br.ufrn.imd.estrututas.trie;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -14,14 +13,14 @@ import java.util.HashMap;
  * @author João Victor Bezerra Barboza
  * @author Pedro Arthur Medeiros Fernandes
  */
-public class TADTrie {
+public class TadTrie {
 
     private NodeTrie raiz;
 
     /**
      *
      */
-    public TADTrie() {
+    public TadTrie() {
         raiz = new NodeTrie();
     }
 
@@ -60,6 +59,17 @@ public class TADTrie {
             }
         }
     }
+    
+
+    public boolean ePrefixo(String s) {
+        NodeTrie n = buscarNodeTrie(s);
+        if (n != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }    
 
     /**
      *
@@ -135,14 +145,5 @@ public class TADTrie {
             }
             return true;
         }
-    }
-
-    /**
-     *
-     * @param prefix
-     * @return
-     */
-    public Collection<String> autoComplete(String prefix) {
-        return raiz.autoComplete(prefix);
     }
 }
