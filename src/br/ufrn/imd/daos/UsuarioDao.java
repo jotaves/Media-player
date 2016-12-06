@@ -10,6 +10,7 @@ import br.ufrn.imd.estrututas.abb.TADArvore;
 import br.ufrn.imd.interfaces.GenericDao;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;
+import br.ufrn.imd.users.execoes.LoginExeption;
 
 /**
  * Classe que implementa O banco de Usuarios.
@@ -52,12 +53,15 @@ public class UsuarioDao implements GenericDao {
      * @param nome
      * @param senha
      * @return
+     * @throws br.ufrn.imd.users.execoes.UsuarioExeption
      */
-    public boolean verificarUsuarioESenha(String nome, String senha) {
+    public boolean verificarUsuarioESenha(String nome, String senha) throws LoginExeption{
         Usuario u = new UsuarioComum(nome, senha);
         NodeArvore<Usuario> n = usuarios.buscarArvore(u);
-
-        return n != null && nome.equals(n.getConteudo().getNome()) && senha.equals(n.getConteudo().getSenha());
+        if(!(n != null && nome.equals(n.getConteudo().getNome()) && senha.equals(n.getConteudo().getSenha()))){
+            throw new LoginExeption("Usuário não exite!");
+        }
+        return true;
     }
 
     /**

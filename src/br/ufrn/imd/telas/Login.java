@@ -9,6 +9,7 @@ import br.ufrn.imd.daos.UsuarioDao;
 import br.ufrn.imd.users.Usuario;
 import br.ufrn.imd.users.UsuarioComum;
 import br.ufrn.imd.users.UsuarioPremium;
+import br.ufrn.imd.users.execoes.LoginExeption;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -147,7 +148,12 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSenhaActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        boolean ok = usuarios.verificarUsuarioESenha(txtUsuario.getText(), txtSenha.getText());
+        boolean ok = false;
+        try {
+            ok = usuarios.verificarUsuarioESenha(txtUsuario.getText(), txtSenha.getText());
+        } catch (LoginExeption ex) {
+            ex.printStackTrace();
+        }
 
         if (ok) {
             Usuario usuario;
@@ -164,9 +170,9 @@ public class Login extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            lblErro.setText("Usuário ou senha incorretos.");
-        }
+        } //else {
+//            lblErro.setText("Usuário ou senha incorretos.");
+//        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
