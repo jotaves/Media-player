@@ -90,12 +90,12 @@ public class Principal extends javax.swing.JFrame {
             lblPremium.setText("");
             btnGerenciar.setEnabled(false);
         }
-        
+
         listModelBusca = new DefaultListModel();
         t = new TadTrie();
-        for(int i = 0; i < listModel.size(); i++) {
+        for (int i = 0; i < listModel.size(); i++) {
             t.inserir(((Musica) listModel.getElementAt(i)).getNome().toLowerCase());
-        }        
+        }
     }
 
     /**
@@ -617,8 +617,6 @@ public class Principal extends javax.swing.JFrame {
         try {
             l = new Login();
             l.setVisible(true);
-            //BancoMusicas b = BancoMusicas.getInstance();
-            //b.removerMusicas();
 
         } catch (IOException ex) {
             Logger.getLogger(Principal.class
@@ -726,14 +724,13 @@ public class Principal extends javax.swing.JFrame {
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
         String palavra = txtBuscar.getText();
-            listModelBusca.clear();
-            for(int i = 0; i < listModel.size(); i++) {
-                if (((Musica) listModel.getElementAt(i)).getNome().toLowerCase().startsWith(palavra.toLowerCase())) {
-                    //System.out.println(((Musica) listModel.getElementAt(i)).getNome());
-                    listModelBusca.addElement(listModel.getElementAt(i));
-                }
+        listModelBusca.clear();
+        for (int i = 0; i < listModel.size(); i++) {
+            if (((Musica) listModel.getElementAt(i)).getNome().toLowerCase().startsWith(palavra.toLowerCase())) {
+                listModelBusca.addElement(listModel.getElementAt(i));
             }
-            ListaMusicas.setModel(listModelBusca);
+        }
+        ListaMusicas.setModel(listModelBusca);
     }//GEN-LAST:event_txtBuscarKeyReleased
 
     /**
