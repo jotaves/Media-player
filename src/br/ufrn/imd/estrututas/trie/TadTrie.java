@@ -18,15 +18,15 @@ public class TadTrie {
     private NodeTrie raiz;
 
     /**
-     *
+     * Construtor da classe
      */
     public TadTrie() {
         raiz = new NodeTrie();
     }
 
     /**
-     *
-     * @param s
+     * Método de inserção
+     * @param s String a ser inserida
      */
     public void inserir(String s) {
         // Auxiliar para percorrer a árvore.
@@ -60,7 +60,11 @@ public class TadTrie {
         }
     }
     
-
+    /**
+     * Verificar se algo é prefixo de uma palavra na árvore
+     * @param s String a ser verificada
+     * @return false, caso não seja prefixo; true, caso seja
+     */
     public boolean ePrefixo(String s) {
         NodeTrie n = buscarNodeTrie(s);
         if (n != null) {
@@ -72,9 +76,9 @@ public class TadTrie {
     }    
 
     /**
-     *
-     * @param s
-     * @return
+     * Buscar na árvore
+     * @param s String a ser buscada
+     * @return true, se está na árvore; false, se não
      */
     public boolean buscar(String s) {
         NodeTrie n = buscarNodeTrie(s);
@@ -86,9 +90,9 @@ public class TadTrie {
     }
 
     /**
-     *
-     * @param s
-     * @return
+     * Método para buscar na árvore
+     * @param s String a ser buscada
+     * @return Null, se não estiver; último nó da letra da palavra, se estiver
      */
     public NodeTrie buscarNodeTrie(String s) {
         HashMap<Character, NodeTrie> aux = raiz.getFilhos();
@@ -112,9 +116,9 @@ public class TadTrie {
     }
 
     /**
-     *
-     * @param s
-     * @return
+     * Deletar um elemento da árvore
+     * @param s String a ser deletada
+     * @return true, se foi deletado; false, se não
      */
     public boolean deletar(String s) {
         if (!buscar(s)) {
